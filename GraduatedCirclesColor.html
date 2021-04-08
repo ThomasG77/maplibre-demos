@@ -1,0 +1,121 @@
+<html>
+  
+<head>
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <script src="https://cdn.maptiler.com/maplibre-gl-js/v1.13.0-rc.4/mapbox-gl.js"></script>
+  <link href="https://cdn.maptiler.com/maplibre-gl-js/v1.13.0-rc.4/mapbox-gl.css" rel="stylesheet" />
+
+  <style>
+#map {position: absolute; top: 0; right: 0; bottom: 0; left: 0;}  
+    
+
+    
+    
+  </style>
+
+  </head>
+
+  <body> 
+    
+  <div id="map"></div>
+   
+   
+<script>
+   
+      //Appel et configuration de la carte
+    
+var map = new mapboxgl.Map({
+  container: 'map',
+  style: 'https://geoserveis.icgc.cat/contextmaps/positron.json', //Fond de carte 
+  zoom: 11.7, // Zoom
+  center: [2.335, 48.854],  // Centrage carte
+  pitch: 10, // Inclinaison carte
+  bearing: 0,  // Rotation carte
+  minZoom:11.7
+    });
+    
+  // Ajout des données
+      
+map.on('load', function () {   
+
+// Add arrondissements
+
+       map.addSource('lignes', {
+            type: 'geojson',
+            data: 'https://raw.githubusercontent.com/mastersigat/data/main/arrondissements.geojson' 
+        });
+
+     map.addLayer({
+            'id': 'Lignes',
+            'type': 'line',
+            'source': 'lignes',
+            'paint': {'line-width': 1,
+                     'line-color': '#111111'}
+     });   
+
+
+
+// Add bike stations
+  
+  map.addSource('Stations', {
+            type: 'geojson',
+            data: 'https://raw.githubusercontent.com/mastersigat/data/main/velib-emplacement-des-stations.geojson' 
+        });
+
+// Configure style of bike stations
+
+     map.addLayer({
+            'id': 'Stations',
+            'type': 'circle',
+            'source': 'Stations',
+            'paint': {'circle-stroke-color': '#ffffff', 
+                      'circle-stroke-width': 0.6, 
+                      'circle-radius': {property: 'capacity', type: 'exponential', stops: [[0, 0],[100, 20]]},
+                      'circle-color': {property: 'capacity',stops: [[20, '#2c7bb6'],
+																	[30, '#abd9e9'],
+																	[40, '#ffffbf'],
+																	[50, '#fdae61'],
+																	[60, '#d7191c'],]}, 'circle-opacity':0.9
+																	}}
+																	);  
+		 
+         });
+  
+  
+  //Interactivity HOVER
+
+var popup = new mapboxgl.Popup({
+    className: "Mypopup",
+  closeButton: false,
+    closeOnClick: false });
+
+map.on('mousemove', function(e) {
+    var features = map.queryRenderedFeatures(e.point, { layers: ['Stations'] });
+    // Change the cursor style as a UI indicator.
+    map.getCanvas().style.cursor = (features.length) ? 'pointer' : '';
+
+    if (!features.length) {
+        popup.remove();
+        return; }
+ 
+    var feature = features[0];
+        popup.setLngLat(feature.geometry.coordinates)
+          .setHTML('<b>'+ feature.properties.name + '</b>' + '<br> Bike capacity > ' +  feature.properties.capacity)
+        .addTo(map);
+
+}); 
+
+
+  
+	
+    // Ajout controle de navigation et echelle 
+  
+map.addControl(new mapboxgl.NavigationControl({position: 'top-left'}));  
+  
+map.addControl(new mapboxgl.ScaleControl({position: 'bottom-right'}));
+  
+  
+</script>
+    
+</body>
+</html>
