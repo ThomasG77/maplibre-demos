@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Change a map's style</title>
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+
+<script src="https://cdn.maptiler.com/maplibre-gl-js/v1.13.0-rc.4/mapbox-gl.js"></script>
+  <link href="https://cdn.maptiler.com/maplibre-gl-js/v1.13.0-rc.4/mapbox-gl.css" rel="stylesheet" />
+  
+<style>
+	body { margin: 0; padding: 0; }
+	#map { position: absolute; top: 0; bottom: 0; width: 100%; }
+</style>
+</head>
+<body>
+<style>
+#menu {
+position: absolute;
+background: #fff;
+padding: 10px;
+font-family: 'Open Sans', sans-serif;
+}
+</style>
+ 
+<div id="map"></div>
+<div id="menu"><b>Choose your Basemap Style</b> <hr>
+
+<input id="https://geoserveis.icgc.cat/contextmaps/osm-bright.json" type="radio" name="rtoggle" value="OSMbright" checked />OSM-Bright
+<input id="https://geoserveis.icgc.cat/contextmaps/icgc.json" type="radio" name="rtoggle" value="ICGC" />ICGC
+<input id="https://geoserveis.icgc.cat/contextmaps/positron.json" type="radio" name="rtoggle" value="Positron" />Positron
+<input id="https://geoserveis.icgc.cat/contextmaps/hibrid.json " type="radio" name="rtoggle" value="Hibrid" />Hibrid
+<input id="https://geoserveis.icgc.cat/contextmaps/fulldark.json" type="radio" name="rtoggle" value="Fulldark" />Fulldark
+<input id="https://geoserveis.icgc.cat/contextmaps/night.json" type="radio" name="rtoggle" value="Night" />Night
+
+</div>
+<script>
+
+
+var map = new mapboxgl.Map({
+container: 'map',
+style: 'https://geoserveis.icgc.cat/contextmaps/osm-bright.json', //Fond de carte 
+zoom: 14,
+center: [-1.68, 48.1272]
+});
+ 
+var layerList = document.getElementById('menu');
+var inputs = layerList.getElementsByTagName('input');
+ 
+function switchLayer(layer) {
+var layerId = layer.target.id;
+map.setStyle(layerId);
+}
+ 
+for (var i = 0; i < inputs.length; i++) {
+inputs[i].onclick = switchLayer;
+}
+
+
+// Add geolocate control to the map.
+map.addControl(
+new mapboxgl.GeolocateControl({
+positionOptions: {
+enableHighAccuracy: true
+},
+trackUserLocation: true
+})
+);
+
+
+
+    // Add Navigation Control and Scale Map
+  
+map.addControl(new mapboxgl.NavigationControl({position: 'top-left'}));  
+  
+map.addControl(new mapboxgl.ScaleControl({position: 'bottom-right'}));
+  
+
+
+
+</script>
+ 
+</body>
+</html
