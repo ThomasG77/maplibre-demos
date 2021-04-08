@@ -1,0 +1,83 @@
+<html>
+  
+<head>
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <script src="https://cdn.maptiler.com/maplibre-gl-js/v1.13.0-rc.4/mapbox-gl.js"></script>
+  <link href="https://cdn.maptiler.com/maplibre-gl-js/v1.13.0-rc.4/mapbox-gl.css" rel="stylesheet" />
+
+  <style>
+#map {position: absolute; top: 0; right: 0; bottom: 0; left: 0;}  
+    
+
+    
+    
+  </style>
+
+  </head>
+
+  <body> 
+    
+  <div id="map"></div>
+   
+   
+<script>
+   
+      //Appel et configuration de la carte
+    
+var map = new mapboxgl.Map({
+  container: 'map',
+  style: 'https://geoserveis.icgc.cat/contextmaps/positron.json', //Fond de carte 
+  zoom: 12, // Zoom
+  center: [2.335, 48.854],  // Centrage carte
+  pitch: 10, // Inclinaison carte
+  bearing: 0,  // Rotation carte
+  minZoom:12
+    });
+     
+  // Add personnal data (GEOJSON)
+      
+map.on('load', function () {   
+   
+
+     // ADD reporting layer
+  
+  map.addSource('DMR', {
+            type: 'geojson',
+            data: 'https://raw.githubusercontent.com/mastersigat/data/main/DMR.geojson',
+  cluster: true,
+  clusterMaxZoom: 14,
+  clusterRadius: 50
+        });
+
+    // Configuration des tailles et des couleurs
+
+map.addLayer({
+            'id': 'clusters',
+            'type': 'circle',
+            'source': 'DMR',
+            filter: ['has', 'point_count'],
+            paint: {'circle-color': ['step',['get', 'point_count'],
+                      '#51bbd6',400,
+                      '#f1f075',600,
+					  '#F012BE',1000,
+                      '#FF4136',],
+                    'circle-radius': ['step',['get', 'point_count'],
+                      5,200,10,400,15,600,20,1000,40]}
+}); 
+
+
+       });
+  
+     
+	
+    // Ajout controle de navigation et echelle 
+  
+map.addControl(new mapboxgl.NavigationControl({position: 'top-left'}));  
+  
+map.addControl(new mapboxgl.ScaleControl({position: 'bottom-right'}));
+  
+  
+</script>
+    
+</body>
+</html>
