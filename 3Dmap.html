@@ -1,0 +1,81 @@
+<html>
+  
+<head>
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <script src="https://cdn.maptiler.com/maplibre-gl-js/v1.13.0-rc.4/mapbox-gl.js"></script>
+  <link href="https://cdn.maptiler.com/maplibre-gl-js/v1.13.0-rc.4/mapbox-gl.css" rel="stylesheet" />
+
+  <style>
+#map {position: absolute; top: 0; right: 0; bottom: 0; left: 0;}  
+  </style>
+
+  </head>
+
+  <body> 
+    
+  <div id="map"></div>
+   
+
+<script>
+
+// Configuration carte
+
+var map = new mapboxgl.Map({
+  container: 'map',
+  style: 'https://geoserveis.icgc.cat/contextmaps/positron.json', //Fond de carte 
+    center: [-1.7023, 48.05], // starting position [lng, lat]
+    zoom: 10.5,
+    pitch : 50	
+});
+
+  // Add data
+
+map.on('style.load', function() {
+      
+ map.addSource('Carro', {
+            type: 'geojson',
+            data: 'https://raw.githubusercontent.com/mastersigat/data/main/200m_carreaux_metropole_shapefile_wgs84.geojson' 
+        });
+ 
+// Extrusion 3D carreaux 	  
+	    
+  map.addLayer({
+    'id': 'extrude',
+    'type': 'fill-extrusion',
+    'source': 'Carro',
+    'layout': {
+    'visibility': 'visible'},
+    'paint': {
+      'fill-extrusion-color': {
+        'property': 'ind_c',
+        'stops': [
+          [1, '#1a9850'],
+          [20, '#91cf60'],
+          [50, '#d9ef8b'],
+		  [100, '#ffffbf'],
+      	  [200, '#fee08b'],
+		  [300, '#fc8d59'],
+          [500, '#d73027']]
+      },
+      'fill-extrusion-height': {
+        'property': 'ind_c',
+		     'stops':  [[1, 0],
+                       [10, 100],
+		  			   [1000, 5000]]},
+      'fill-extrusion-opacity': 0.95,
+      'fill-extrusion-base': 0
+    } 
+  }); 
+ 
+});
+
+
+    // Ajout controle de navigation et echelle 
+  
+map.addControl(new mapboxgl.NavigationControl({position: 'top-left'}));  
+  
+map.addControl(new mapboxgl.ScaleControl({position: 'bottom-right'}));
+  
+</script>
+
+</body>
