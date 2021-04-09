@@ -11,35 +11,38 @@
 <style>
 	body { margin: 0; padding: 0; }
 	#map { position: absolute; top: 0; bottom: 0; width: 100%; }
-</style>
-</head>
-<body>
-<style>
-#menu {
+	#menu {
 position: absolute;
 background: #fff;
 padding: 10px;
 font-family: 'Open Sans', sans-serif;
 }
 </style>
+</head>
+<body>
+
  
 <div id="map"></div>
 <div id="menu"><b>Choose your Basemap Style</b> <hr>
 
-<input id="https://geoserveis.icgc.cat/contextmaps/osm-bright.json" type="radio" name="rtoggle" value="OSMbright" checked />OSM-Bright
+<input id="https://api.maptiler.com/maps/voyager/style.json?key=rrASqj6frF6l2rrOFR4A" type="radio" name="rtoggle" value="Night" checked />Voyager
+<input id="https://api.maptiler.com/maps/streets/style.json?key=rrASqj6frF6l2rrOFR4A" type="radio" name="rtoggle" value="Night" />Streets
+<input id="https://api.maptiler.com/maps/toner/style.json?key=rrASqj6frF6l2rrOFR4A" type="radio" name="rtoggle" value="Night" />Toner
+<input id="https://geoserveis.icgc.cat/contextmaps/hibrid.json" type="radio" name="rtoggle" value="Hibrid" />Hibrid
+<input id="https://geoserveis.icgc.cat/contextmaps/osm-bright.json" type="radio" name="rtoggle" value="OSMbright"  />OSM-Bright
 <input id="https://geoserveis.icgc.cat/contextmaps/icgc.json" type="radio" name="rtoggle" value="ICGC" />ICGC
 <input id="https://geoserveis.icgc.cat/contextmaps/positron.json" type="radio" name="rtoggle" value="Positron" />Positron
-<input id="https://geoserveis.icgc.cat/contextmaps/hibrid.json " type="radio" name="rtoggle" value="Hibrid" />Hibrid
 <input id="https://geoserveis.icgc.cat/contextmaps/fulldark.json" type="radio" name="rtoggle" value="Fulldark" />Fulldark
 <input id="https://geoserveis.icgc.cat/contextmaps/night.json" type="radio" name="rtoggle" value="Night" />Night
 
 </div>
 <script>
 
+// Add map
 
 var map = new mapboxgl.Map({
 container: 'map',
-style: 'https://geoserveis.icgc.cat/contextmaps/osm-bright.json', //Fond de carte 
+style: 'https://api.maptiler.com/maps/voyager/style.json?key=rrASqj6frF6l2rrOFR4A', //Fond de carte 
 zoom: 14,
 center: [-1.68, 48.1272]
 });
