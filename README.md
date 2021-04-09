@@ -1,7 +1,5 @@
 # MapLibre
 
-180 / 5000
-Résultats de traduction
 This gitlab page centralizes all the html / css / javascript syntaxes for MapLibreGL-based maps accessible on this website https://sites-formations.univ-rennes2.fr/mastersigat/MaplibreGL
 
 
