@@ -1,34 +1,31 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 <meta charset="utf-8" />
 <title>Change a map's style</title>
 <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-
 <script src="https://cdn.maptiler.com/maplibre-gl-js/v1.13.0-rc.4/mapbox-gl.js"></script>
-  <link href="https://cdn.maptiler.com/maplibre-gl-js/v1.13.0-rc.4/mapbox-gl.css" rel="stylesheet" />
+<link href="https://cdn.maptiler.com/maplibre-gl-js/v1.13.0-rc.4/mapbox-gl.css" rel="stylesheet" />
   
 <style>
 	body { margin: 0; padding: 0; }
 	#map { position: absolute; top: 0; bottom: 0; width: 100%; }
-#marker {
+  #marker {
 background-image: url('https://sites-formations.univ-rennes2.fr/mastersigat/images/75709127.png');
 background-size: cover;
 width: 50px;
 height: 50px;
 border-radius: 50%;
-cursor: pointer;
-}
- 
-.mapboxgl-popup {
-max-width: 200px;
-}
-
+cursor: pointer;}
+ #mapboxgl-popup {
+max-width: 200px;}
 </style>
+
 </head>
+
 <body>
 
- 
 <div id="map"></div>
 
 <script>
@@ -47,13 +44,11 @@ bearing : 50 // Rotation
 
 // create the popup
 var popup = new mapboxgl.Popup({ offset: 25 }).setText(
-'The great place of Rennes'
-);
+'The great place of Rennes');
  
 // create DOM element for the marker
 var el = document.createElement('div');
 el.id = 'marker';
-
 
 // create the marker
 new mapboxgl.Marker(el)
@@ -61,19 +56,13 @@ new mapboxgl.Marker(el)
 .setPopup(popup) // sets a popup on this marker
 .addTo(map);
 
-
-
-
-    // Add Navigation Control and Scale Map
+// Add Navigation Control and Scale Map
   
-map.addControl(new mapboxgl.NavigationControl({position: 'top-left'}));  
-  
+map.addControl(new mapboxgl.NavigationControl({position: 'top-left'}));    
 map.addControl(new mapboxgl.ScaleControl({position: 'bottom-right'}));
   
-
-
-
 </script>
  
 </body>
+
 </html
