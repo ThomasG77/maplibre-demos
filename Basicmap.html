@@ -9,16 +9,15 @@
 <link href="https://cdn.maptiler.com/maplibre-gl-js/v1.13.0-rc.4/mapbox-gl.css" rel="stylesheet" />
   
 <style>
-	body { margin: 0; padding: 0; }
-	#map { position: absolute; top: 0; bottom: 0; width: 100%; }
-  #marker {
+#map { position: absolute; top: 0; bottom: 0; width: 100%; }
+#marker {
 background-image: url('https://sites-formations.univ-rennes2.fr/mastersigat/images/75709127.png');
 background-size: cover;
 width: 50px;
 height: 50px;
 border-radius: 50%;
 cursor: pointer;}
- #mapboxgl-popup {
+#mapboxgl-popup {
 max-width: 200px;}
 </style>
 
@@ -43,8 +42,7 @@ bearing : 50 // Rotation
  
 
 // create the popup
-var popup = new mapboxgl.Popup({ offset: 25 }).setText(
-'The great place of Rennes');
+var popup = new mapboxgl.Popup({ offset: 25 }).setText('The great place of Rennes');
  
 // create DOM element for the marker
 var el = document.createElement('div');
