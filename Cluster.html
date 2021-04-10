@@ -1,83 +1,83 @@
+<!DOCTYPE html>
 <html>
-  
 <head>
-  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-  <script src="https://cdn.maptiler.com/maplibre-gl-js/v1.13.0-rc.4/mapbox-gl.js"></script>
+<meta charset='utf-8' />
+<title>Create a heatmap layer</title>
+<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+ <script src="https://cdn.maptiler.com/maplibre-gl-js/v1.13.0-rc.4/mapbox-gl.js"></script>
   <link href="https://cdn.maptiler.com/maplibre-gl-js/v1.13.0-rc.4/mapbox-gl.css" rel="stylesheet" />
 
-  <style>
-#map {position: absolute; top: 0; right: 0; bottom: 0; left: 0;}  
-    
-
-    
-    
-  </style>
-
-  </head>
-
-  <body> 
-    
-  <div id="map"></div>
-   
-   
+<style>
+body { margin:0; padding:0; }
+#map { position:absolute; top:0; bottom:0; width:100%; }
+</style>
+</head>
+<body>
+ 
+ 
+<div id='map'></div>
+ 
 <script>
-   
-      //Appel et configuration de la carte
-    
-var map = new mapboxgl.Map({
-  container: 'map',
-  style: 'https://geoserveis.icgc.cat/contextmaps/positron.json', //Fond de carte 
-  zoom: 12, // Zoom
-  center: [2.335, 48.854],  // Centrage carte
-  pitch: 10, // Inclinaison carte
-  bearing: 0,  // Rotation carte
-  minZoom:12
-    });
-     
-  // Add personnal data (GEOJSON)
-      
-map.on('load', function () {   
-   
 
-     // ADD reporting layer
+var map = new mapboxgl.Map({
+container: 'map',
+style: 'https://api.maptiler.com/maps/positron/style.json?key=rrASqj6frF6l2rrOFR4A', 
+  zoom: 11.7, // Zoom
+  center: [2.335, 48.858],  // Centrage carte
+  bearing: 0,  // Rotation carte
+  minZoom:11.7
+});
+ 
+map.on('load', function() {
+
+  // Add data
   
-  map.addSource('DMR', {
+map.addSource('DMR', {
             type: 'geojson',
             data: 'https://raw.githubusercontent.com/mastersigat/data/main/DMR.geojson',
-  cluster: true,
-  clusterMaxZoom: 14,
-  clusterRadius: 50
+			cluster: true,
+			clusterMaxZoom: 15,
+			clusterRadius: 45
         });
 
-    // Configuration des tailles et des couleurs
+    // Configuration cluster Size and color
 
 map.addLayer({
-            'id': 'clusters',
+            'id': 'Clusters',
             'type': 'circle',
             'source': 'DMR',
             filter: ['has', 'point_count'],
             paint: {'circle-color': ['step',['get', 'point_count'],
-                      '#51bbd6',400,
-                      '#f1f075',600,
-					  '#F012BE',1000,
-                      '#FF4136',],
-                    'circle-radius': ['step',['get', 'point_count'],
-                      5,200,10,400,15,600,20,1000,40]}
+						'#51bbd6',1000,
+						'#f1f075',2500,
+						'#f28cb1', 5000,
+						'#FF4136'],
+					'circle-radius': ['step',['get', 'point_count'],
+									5,200,10,500,15,1000,25,3000,35,5000,50]}
 }); 
 
+  
+  // Configuration cluster label
+  
+map.addLayer({ id: 'cluster-count',
+               type: 'symbol',
+               source: 'DMR',
+filter: ['has', 'point_count'],
+layout: {
+'text-field': '{point_count_abbreviated}',
+'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+'text-size': 12}
+});  
 
-       });
+    });
   
-     
-	
-    // Ajout controle de navigation et echelle 
-  
+   // Add navigation control and scale
+   
 map.addControl(new mapboxgl.NavigationControl({position: 'top-left'}));  
-  
 map.addControl(new mapboxgl.ScaleControl({position: 'bottom-right'}));
   
   
 </script>
-    
+ 
 </body>
 </html>
