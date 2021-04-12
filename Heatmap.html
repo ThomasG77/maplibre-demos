@@ -7,10 +7,6 @@
 
   <style>
 #map {position: absolute; top: 0; right: 0; bottom: 0; left: 0;}  
-    
-
-    
-    
   </style>
 
   </head>
@@ -22,7 +18,7 @@
    
 <script>
    
-      //Appel et configuration de la carte
+//Map configuration
     
 var map = new mapboxgl.Map({
   container: 'map',
@@ -83,9 +79,7 @@ map.addLayer({
 // Add Navigation control and scale
   
 map.addControl(new mapboxgl.NavigationControl({position: 'top-left'}));  
-  
 map.addControl(new mapboxgl.ScaleControl({position: 'bottom-right'}));
-  
   
 </script>
     
