@@ -8,36 +8,33 @@
   <link href="https://cdn.maptiler.com/maplibre-gl-js/v1.13.0-rc.4/mapbox-gl.css" rel="stylesheet" />
 
     <style>
-        #map {position: absolute; top: 0; right: 0; bottom: 0; left: 0;}  
-    
-    .Mypopup .mapboxgl-popup-content {
-      background-color: black;
-      color : white;
-      opacity : 0.7;
-}
-
+#map {position: absolute; top: 0; right: 0; bottom: 0; left: 0;}  
     </style>
+
 </head>
+
 <body>
  
 <div id='map'></div>
 
 <script>
 
-//Configuration de la carte
+//Map configuration
+
 var map = new mapboxgl.Map({
-    container: 'map', // container id
+  container: 'map', // container id
   style: 'https://geoserveis.icgc.cat/contextmaps/positron.json', //Fond de carte 
 	center: [-2.802, 48.1],
 	zoom :7.7,
 	pitch : 40,
 	bearing : 1
 });
+
+
 map.on('style.load', function() {
 
   
     // Add data
-
       
  map.addSource('Municipalities', {
             type: 'geojson',
@@ -46,27 +43,28 @@ map.on('style.load', function() {
  
   
   
-	// Municipalities layer
+	// Symbology of Municipalities layer (Population 3D and density color)
 	
 map.addLayer({
         'id': 'Municipalities',
         'type': 'fill-extrusion',
         'source': 'Municipalities',
         'layout': {'visibility': 'visible'},
-		'paint': {'fill-extrusion-color': {
-                  property: 'density',
-                  stops: [
+		    'paint': {'fill-extrusion-color': {
+                  'property': 'density',
+                  'stops': [
                     [20, '#4d9221'],
                     [50, '#a1d76a'],
                     [100, '#e6f5d0'],
                     [200, '#fde0ef'],
                     [500, '#e9a3c9'],
-					[1000, '#c51b7d'],]},
-					'fill-extrusion-height': {
-        'property': 'POPULATION',
-		    'stops': [[100, 10],
-					  [100, 100],
-		              [200000, 70000]] },
+					          [1000, '#c51b7d'],]},
+					        'fill-extrusion-height': {
+                  'property': 'POPULATION',
+		              'stops': [
+                    [100, 10],
+					          [100, 100],
+		                [200000, 70000]] },
       'fill-extrusion-opacity': 0.95,
       'fill-extrusion-base': 0
     }
@@ -88,36 +86,12 @@ map.addLayer({
                      'line-color': '#111111'}
      });   
     
-		 
 
 		});	 
 
-		
-		 var popup = new mapboxgl.Popup({
-    className: "Mypopup",
-  closeButton: false,
-    closeOnClick: false });
-
-map.on('mousemove', function(e) {
-    var features = map.queryRenderedFeatures(e.point, { layers: ['Municipalities'] });
-    map.getCanvas().style.cursor = (features.length) ? 'pointer' : '';
-
-    if (!features.length) {
-        popup.remove();
-        return; }
- 
-    var feature = features[0];
-        popup.setLngLat(feature.geometry.coordinates)
-          .setHTML('<b>'+ feature.properties.NOM_COM_M + '</b>')
-        .addTo(map);
-
-});
-
-
-    // Ajout controle de navigation et echelle 
+ // Add navigation control and scale
   
-map.addControl(new mapboxgl.NavigationControl({position: 'top-right'}));  
-  
+map.addControl(new mapboxgl.NavigationControl({position: 'top-right'}));    
 map.addControl(new mapboxgl.ScaleControl({position: 'bottom-right'}));
   
 </script>
