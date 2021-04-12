@@ -7,10 +7,6 @@
 
   <style>
 #map {position: absolute; top: 0; right: 0; bottom: 0; left: 0;}  
-    
-
-    
-    
   </style>
 
   </head>
@@ -22,7 +18,7 @@
    
 <script>
    
-      //Appel et configuration de la carte
+// Map configuration
     
 var map = new mapboxgl.Map({
   container: 'map',
@@ -34,7 +30,7 @@ var map = new mapboxgl.Map({
   minZoom:11.7
     });
     
-  // Ajout des données
+  // Add data (Geojson)
       
 map.on('load', function () {   
 
@@ -105,13 +101,9 @@ map.on('mousemove', function(e) {
 
 }); 
 
-
-  
-	
-    // Ajout controle de navigation et echelle 
+    // Add navigation control and scale
   
 map.addControl(new mapboxgl.NavigationControl({position: 'top-left'}));  
-  
 map.addControl(new mapboxgl.ScaleControl({position: 'bottom-right'}));
   
   
