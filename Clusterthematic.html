@@ -28,7 +28,6 @@
             margin-right: 5px;
         }
     
-    
   </style>
 
   </head>
@@ -36,13 +35,13 @@
   <body> 
     
   <div id="map"></div>
-      <div class='map-overlay' id='legend'></div>
+  <div class='map-overlay' id='legend'></div>
 
    
 <script>
 
-      //Appel et configuration de la carte
-    
+      //Map configuration
+
 var map = new mapboxgl.Map({
   container: 'map',
   style: 'https://geoserveis.icgc.cat/contextmaps/positron.json', //Fond de carte 
@@ -75,7 +74,7 @@ var map = new mapboxgl.Map({
     }
 	
 
-// CLUSTER THEMATIQUE
+// Thematic cluster variables
 
 var mag1 = ['match',['get', 'type'],
                 ['A'],
@@ -123,6 +122,9 @@ map.on('load', function () {
 'mag3': ['+', ['case', mag3, 1, 0]]
 }
         });
+
+
+// Cluster Labels
 
 map.addLayer({
 'id': 'earthquake_label',
@@ -290,12 +292,9 @@ r + r0 * y0,
 }
  
 
-
-	
-    // Ajout controle de navigation et echelle 
+ // Add navigation control and scale
   
 map.addControl(new mapboxgl.NavigationControl({position: 'top-left'}));  
-  
 map.addControl(new mapboxgl.ScaleControl({position: 'bottom-right'}));
   
   
