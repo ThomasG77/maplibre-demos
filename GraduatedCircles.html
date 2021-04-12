@@ -7,10 +7,6 @@
 
   <style>
 #map {position: absolute; top: 0; right: 0; bottom: 0; left: 0;}  
-    
-
-    
-    
   </style>
 
   </head>
@@ -19,22 +15,21 @@
     
   <div id="map"></div>
    
-   
 <script>
    
-      //Appel et configuration de la carte
+// Map configuration
     
 var map = new mapboxgl.Map({
   container: 'map',
-  style: 'https://geoserveis.icgc.cat/contextmaps/positron.json', //Fond de carte 
+  style: 'https://geoserveis.icgc.cat/contextmaps/positron.json', // basemap
   zoom: 11.7, // Zoom
-  center: [2.335, 48.854],  // Centrage carte
-  pitch: 10, // Inclinaison carte
-  bearing: 0,  // Rotation carte
+  center: [2.335, 48.854],  // Map center
+  pitch: 10, // Inclinaison 
+  bearing: 0,  // Rotation 
   minZoom:11.7
     });
     
-  // Ajout des données
+  // Add date (Geojson)
       
 map.on('load', function () {   
 
@@ -54,7 +49,6 @@ map.on('load', function () {
      });   
 
 
-
 // Add bike stations
   
   map.addSource('Stations', {
@@ -71,20 +65,15 @@ map.on('load', function () {
                       'circle-radius': {
         property: 'capacity',
         type: 'exponential',
-        stops: [
-          [0, 0],
-          [95, 20]
-        ]
-      },
+        stops: [[0, 0],
+                [95, 20]]},
                       'circle-color': '#0074D9'}}
                  );  
 
-		 
-		 
          });
   
   
-  //Interactivité HOVER
+  // Interactivity configuration (popup)
 
 var popup = new mapboxgl.Popup({
     className: "Mypopup",
@@ -108,12 +97,9 @@ map.on('mousemove', function(e) {
 }); 
 
 
-  
-	
-    // Ajout controle de navigation et echelle 
+// Add navigation control and scale 
   
 map.addControl(new mapboxgl.NavigationControl({position: 'top-left'}));  
-  
 map.addControl(new mapboxgl.ScaleControl({position: 'bottom-right'}));
   
   
