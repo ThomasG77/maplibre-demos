@@ -8,20 +8,7 @@
   <link href="https://cdn.maptiler.com/maplibre-gl-js/v1.13.0-rc.4/mapbox-gl.css" rel="stylesheet" />
 
     <style>
-        body { margin:0; padding:0; }
-        h2, h3 {
-            margin: 10px;
-            font-size: 1.2em;
-        }
-        h3 {
-            font-size: 1em;
-        }
-        p {
-            font-size: 0.85em;
-            margin: 10px;
-            text-align: left;
-        }
-        .map-overlay {
+        #map-overlay {
             position: absolute;
             bottom: 0;
             right: 0;
@@ -72,7 +59,7 @@
 
 <script>
 
-//Configuration de la carte
+// Map configuration
 var map = new mapboxgl.Map({
     container: 'map', // container id
   style: 'https://geoserveis.icgc.cat/contextmaps/positron.json', //Fond de carte 
@@ -80,9 +67,10 @@ var map = new mapboxgl.Map({
 	zoom :7.7,
 	pitch : 15
 });
+
 map.on('style.load', function() {
 
-  // Configuration légende
+  // Legend configuration
 
   map.getCanvas().style.cursor = 'default';
     map.getCanvas().style.cursor = 'default';
@@ -102,10 +90,8 @@ map.on('style.load', function() {
         legend.appendChild(item);
     }
 	
-  
-    // Add data
+    // Add data (Geojson)
 
-      
  map.addSource('Municipalities', {
             type: 'geojson',
             data: 'https://raw.githubusercontent.com/mastersigat/data/main/communesBZH.geojson' 
@@ -113,7 +99,7 @@ map.on('style.load', function() {
  
   
   
-	// Municipalities layer
+	// Municipalities symbology
 	
 map.addLayer({
         'id': 'Municipalities',
@@ -148,11 +134,10 @@ map.addLayer({
             'paint': {'line-width': 2.5,
                      'line-color': '#111111'}
      });   
-    
-		 
-		 
-		 
-    // Configuration fenêtre d'informations
+
+
+    // Popup configuration
+
     map.on('mousemove', function (e) {
         var states = map.queryRenderedFeatures(e.point, {
             layers: ['Municipalities']
@@ -166,10 +151,9 @@ map.addLayer({
     });
 });
 
-    // Ajout controle de navigation et echelle 
+    // Add navigation control and scale
   
 map.addControl(new mapboxgl.NavigationControl({position: 'top-right'}));  
-  
 map.addControl(new mapboxgl.ScaleControl({position: 'bottom-right'}));
   
 </script>
