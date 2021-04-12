@@ -8,7 +8,7 @@
   <style>
 #map {position: absolute; top: 0; right: 0; bottom: 0; left: 0;}  
     
- #legend {
+#legend {
         left : 1%;
         padding: 10px;
             box-shadow: 0 1px 2px rgba(0,0,0,0.10);
@@ -35,29 +35,27 @@
 
   <body> 
     
-  <div id="map"></div>
-   <div class='map-overlay' id='legend'><hR><b>311 - Type of report</b> <hR> </div>
+<div id="map"></div>
+<div class='map-overlay' id='legend'><hR><b>311 - Type of report</b> <hR> </div>
 
    
 <script>
    
-      //Appel et configuration de la carte
+  // Map configuration
     
 var map = new mapboxgl.Map({
   container: 'map',
-  style: 'https://geoserveis.icgc.cat/contextmaps/positron.json', //Fond de carte 
+  style: 'https://geoserveis.icgc.cat/contextmaps/positron.json', //Basemap 
   zoom: 12, // Zoom
-  center: [2.335, 48.854],  // Centrage carte
-  pitch: 10, // Inclinaison carte
-  bearing: 0,  // Rotation carte
+  center: [2.335, 48.854],  // Map center
+  pitch: 10, // Inclinaison 
+  bearing: 0,  // Rotation 
   minZoom:12
     });
-    
-  // Add personnal data (GEOJSON)
-      
+          
 map.on('load', function () {   
    
-  // Configuration légende
+  // Legend configuration
 
   map.getCanvas().style.cursor = 'default';
     map.getCanvas().style.cursor = 'default';
@@ -76,12 +74,15 @@ map.on('load', function () {
         item.appendChild(value);
         legend.appendChild(item);
     }
-     // ADD reporting layer
+     // Add point data layer
   
   map.addSource('Stations', {
             type: 'geojson',
             data: 'https://raw.githubusercontent.com/mastersigat/data/main/DMR.geojson' 
         });
+
+
+     // Dots symbology
 
      map.addLayer({
             'id': 'Stations',
@@ -94,15 +95,15 @@ map.on('load', function () {
                 'circle-color': [
                 'match',
                  ['get', 'type'],
-                'A', '#fbb03b',
-                'B', '#0074D9',
-                'C', '#2ECC40',
-                 /* other */ '#ccc'
+                    'A', '#fbb03b',
+                    'B', '#0074D9',
+                    'C', '#2ECC40',
+                   /* other */ '#ccc'
             ]
         } 
     });
 
-       // Add arrondissements
+       // Add arrondissements layer
 
        map.addSource('lignes', {
             type: 'geojson',
@@ -118,14 +119,11 @@ map.on('load', function () {
      });   
          });
   
-     
 	
-    // Ajout controle de navigation et echelle 
+    // Add navigation control and scale
   
 map.addControl(new mapboxgl.NavigationControl({position: 'top-left'}));  
-  
 map.addControl(new mapboxgl.ScaleControl({position: 'bottom-right'}));
-  
   
 </script>
     
