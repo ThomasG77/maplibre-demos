@@ -8,16 +8,18 @@
   <link href="https://cdn.maptiler.com/maplibre-gl-js/v1.13.0-rc.4/mapbox-gl.css" rel="stylesheet" />
 
 <style>
-body { margin:0; padding:0; }
 #map { position:absolute; top:0; bottom:0; width:100%; }
 </style>
+
 </head>
+
 <body>
- 
- 
+  
 <div id='map'></div>
  
 <script>
+
+// Map configuration
 
 var map = new mapboxgl.Map({
 container: 'map',
@@ -75,7 +77,6 @@ layout: {
    
 map.addControl(new mapboxgl.NavigationControl({position: 'top-left'}));  
 map.addControl(new mapboxgl.ScaleControl({position: 'bottom-right'}));
-  
   
 </script>
  
