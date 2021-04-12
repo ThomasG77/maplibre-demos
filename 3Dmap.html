@@ -14,11 +14,10 @@
   <body> 
     
   <div id="map"></div>
-   
 
 <script>
 
-// Configuration carte
+// Map configuration
 
 var map = new mapboxgl.Map({
   container: 'map',
@@ -32,12 +31,12 @@ var map = new mapboxgl.Map({
 
 map.on('style.load', function() {
       
- map.addSource('Carro', {
+map.addSource('Carro', {
             type: 'geojson',
             data: 'https://raw.githubusercontent.com/mastersigat/data/main/200m_carreaux_metropole_shapefile_wgs84.geojson' 
         });
  
-// Extrusion 3D carreaux 	  
+// 3D fill extrusion and symbology  
 	    
   map.addLayer({
     'id': 'extrude',
@@ -52,16 +51,16 @@ map.on('style.load', function() {
           [1, '#1a9850'],
           [20, '#91cf60'],
           [50, '#d9ef8b'],
-		  [100, '#ffffbf'],
+		      [100, '#ffffbf'],
       	  [200, '#fee08b'],
-		  [300, '#fc8d59'],
-          [500, '#d73027']]
-      },
+		      [300, '#fc8d59'],
+          [500, '#d73027']]      },
       'fill-extrusion-height': {
         'property': 'ind_c',
-		     'stops':  [[1, 0],
-                       [10, 100],
-		  			   [1000, 5000]]},
+		     'stops':  
+         [[1, 0],
+         [10, 100],
+		  	 [1000, 5000]]},
       'fill-extrusion-opacity': 0.95,
       'fill-extrusion-base': 0
     } 
@@ -70,10 +69,9 @@ map.on('style.load', function() {
 });
 
 
-    // Ajout controle de navigation et echelle 
+    // Add navigation control and scale
   
 map.addControl(new mapboxgl.NavigationControl({position: 'top-left'}));  
-  
 map.addControl(new mapboxgl.ScaleControl({position: 'bottom-right'}));
   
 </script>
