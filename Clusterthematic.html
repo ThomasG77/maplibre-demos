@@ -107,6 +107,22 @@ var colors = ['#fbb03b', '#0074D9', '#2ECC40'];
 map.on('load', function () {   
    
 
+     // Add arrondissements
+
+       map.addSource('lignes', {
+            type: 'geojson',
+            data: 'https://raw.githubusercontent.com/mastersigat/data/main/arrondissements.geojson' 
+        });
+
+     map.addLayer({
+            'id': 'Lignes',
+            'type': 'line',
+            'source': 'lignes',
+            'paint': {'line-width': 1,
+                     'line-color': '#AAAAAA'}
+     });   
+     
+
      // ADD reporting layer
   
   map.addSource('earthquakes', {
