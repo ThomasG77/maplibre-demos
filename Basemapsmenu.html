@@ -11,21 +11,34 @@
 <style>
 	body { margin: 0; padding: 0; }
 	#map { position: absolute; top: 0; bottom: 0; width: 100%; }
-	#menu { position: absolute;
-			background: #fff;
-			padding: 10px;
-			font-family: 'Open Sans', sans-serif;}
+	#menu {
+position: absolute;
+background: #fff;
+padding: 10px;
+font-family: 'Open Sans', sans-serif;
+}
+#marker {
+background-image: url('https://sites-formations.univ-rennes2.fr/mastersigat/images/75709127.png');
+background-size: cover;
+width: 50px;
+height: 50px;
+border-radius: 50%;
+cursor: pointer;}
+
+.Mypopup .mapboxgl-popup-content {
+      background-color: black;
+      color : white;
+      opacity : 0.7;}
+
 </style>
-
 </head>
-
 <body>
-
+ 
 <div id="map"></div>
-
 <div id="menu"><b>Choose your Basemap Style</b> <hr>
+
 <input id="https://api.maptiler.com/maps/voyager/style.json?key=rrASqj6frF6l2rrOFR4A" type="radio" name="rtoggle" value="Night" checked />Voyager
-<input id="https://api.maptiler.com/maps/streets/style.json?key=rrASqj6frF6l2rrOFR4A" type="radio" name="rtoggle" value="Night" />Streets
+<input id="https://api.maptiler.com/maps/pastel/style.json?key=rrASqj6frF6l2rrOFR4A" type="radio" name="rtoggle" value="Night" />Pastel
 <input id="https://api.maptiler.com/maps/toner/style.json?key=rrASqj6frF6l2rrOFR4A" type="radio" name="rtoggle" value="Night" />Toner
 <input id="https://geoserveis.icgc.cat/contextmaps/hibrid.json" type="radio" name="rtoggle" value="Hibrid" />Hibrid
 <input id="https://geoserveis.icgc.cat/contextmaps/osm-bright.json" type="radio" name="rtoggle" value="OSMbright"  />OSM-Bright
@@ -33,11 +46,11 @@
 <input id="https://geoserveis.icgc.cat/contextmaps/positron.json" type="radio" name="rtoggle" value="Positron" />Positron
 <input id="https://geoserveis.icgc.cat/contextmaps/fulldark.json" type="radio" name="rtoggle" value="Fulldark" />Fulldark
 <input id="https://geoserveis.icgc.cat/contextmaps/night.json" type="radio" name="rtoggle" value="Night" />Night
-</div>
 
+</div>
 <script>
 
-// Add map
+// Map configuration
 
 var map = new mapboxgl.Map({
 container: 'map',
@@ -45,8 +58,9 @@ style: 'https://api.maptiler.com/maps/voyager/style.json?key=rrASqj6frF6l2rrOFR4
 zoom: 14,
 center: [-1.68, 48.1272]
 });
+ 
 
-// Configure basemap menu
+ // Basemaps configuration
 
 var layerList = document.getElementById('menu');
 var inputs = layerList.getElementsByTagName('input');
@@ -61,14 +75,35 @@ inputs[i].onclick = switchLayer;
 }
 
 
+// create the popup
+var popup = new mapboxgl.Popup({ className: "Mypopup", closeButton: false, closeOnClick: true, offset: 25 }).setText('The another great place of Rennes');
+ 
+// create DOM element for the marker
+var el = document.createElement('div');
+el.id = 'marker';
+
+// create the marker
+new mapboxgl.Marker(el)
+.setLngLat([-1.6791, 48.1283])
+.setPopup(popup) // sets a popup on this marker
+.addTo(map);
+
+
+
 // Add geolocate control to the map.
-map.addControl( new mapboxgl.GeolocateControl({positionOptions: {enableHighAccuracy: true}, trackUserLocation: true}));
+map.addControl(
+new mapboxgl.GeolocateControl({
+positionOptions: {
+enableHighAccuracy: true
+},
+trackUserLocation: true
+})
+);
 
-
-// Add Navigation Control and Scale Map
-  
-map.addControl(new mapboxgl.NavigationControl({position: 'top-left'}));   
+    // Add Navigation Control and Scale Map
+map.addControl(new mapboxgl.NavigationControl({position: 'top-left'}));  
 map.addControl(new mapboxgl.ScaleControl({position: 'bottom-right'}));
+  
 
 </script>
  
