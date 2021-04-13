@@ -32,7 +32,24 @@ style: 'https://api.maptiler.com/maps/positron/style.json?key=rrASqj6frF6l2rrOFR
  
 map.on('load', function() {
 
-  // Add data
+
+  // Add arrondissements
+
+       map.addSource('lignes', {
+            type: 'geojson',
+            data: 'https://raw.githubusercontent.com/mastersigat/data/main/arrondissements.geojson' 
+        });
+
+     map.addLayer({
+            'id': 'Lignes',
+            'type': 'line',
+            'source': 'lignes',
+            'paint': {'line-width': 1,
+                     'line-color': '#AAAAAA'}
+     });   
+
+
+  // Add Bike stations data
   
 map.addSource('DMR', {
             type: 'geojson',
