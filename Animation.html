@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>MapLibreGL / Animation</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+  <script src="https://cdn.maptiler.com/maplibre-gl-js/v1.13.0-rc.4/mapbox-gl.js"></script>
+  <link href="https://cdn.maptiler.com/maplibre-gl-js/v1.13.0-rc.4/mapbox-gl.css" rel="stylesheet" />
+    <style>
+    #map {position: absolute; top: 0; right: 0; bottom: 0; left: 0;}  
+
+	  .marker {
+  background-image: url('mapbox-icon.png');
+  background-size: cover;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script>
+
+
+// Map configuration
+
+      var map = new mapboxgl.Map({
+        container: 'map',
+        style: 'https://api.maptiler.com/maps/streets/style.json?key=rrASqj6frF6l2rrOFR4A',
+        minZoom: 6,
+        maxZoom: 18,
+        center: [-1.702, 48.119]      });
+
+// Animation configuration
+
+
+      function rotate() {
+        map.easeTo({ bearing: 100, duration: 8000, pitch: 80, zoom: 17 });
+        window.setTimeout(function () {
+          map.easeTo({ bearing: 180, duration: 5000, pitch: 0, zoom: 14 });
+          window.setTimeout(function () {
+            map.easeTo({ bearing: 270, duration: 5000, pitch: 50, zoom: 18 });
+            window.setTimeout(function () {
+              rotator();
+            }, 8000);
+          }, 5000);
+        }, 5000);
+      }
+
+      map.on('load', function () {
+        rotate();
+		
+
+ // Add marker 	
+ 
+var marker = new mapboxgl.Marker()
+.setLngLat([-1.702, 48.119])
+
+.addTo(map);
+  
+      });
+    </script>
+  </body>
+</html>
