@@ -5,8 +5,8 @@
 <meta charset="utf-8" />
 <title>Basic MapLibreGL Map</title>
 <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-<script src="https://cdn.maptiler.com/maplibre-gl-js/v1.13.0-rc.4/mapbox-gl.js"></script>
-<link href="https://cdn.maptiler.com/maplibre-gl-js/v1.13.0-rc.4/mapbox-gl.css" rel="stylesheet" />
+<script src='https://unpkg.com/maplibre-gl@2.1.1/dist/maplibre-gl.js'></script>
+<link href='https://unpkg.com/maplibre-gl@2.1.1/dist/maplibre-gl.css' rel='stylesheet' />
   
 <style>
 #map { position: absolute; top: 0; bottom: 0; width: 100%; }
@@ -34,7 +34,7 @@ cursor: pointer;}
 
 // Map configuration 
 
-var map = new mapboxgl.Map({
+var map = new maplibregl.Map({
 container: 'map',
 style: 'https://geoserveis.icgc.cat/contextmaps/osm-bright.json', //Basemap style
 zoom: 17, // Zoom
@@ -45,7 +45,7 @@ bearing : 50 // Rotation
  
 
 // create the popup
-var popup = new mapboxgl.Popup({ className: "Mypopup",
+var popup = new maplibregl.Popup({ className: "Mypopup",
   closeButton: false,
   closeOnClick: true, offset: 25 }).setText('The great place of Rennes');
  
@@ -54,15 +54,23 @@ var el = document.createElement('div');
 el.id = 'marker';
 
 // create the marker
-new mapboxgl.Marker(el)
+new maplibregl.Marker(el)
 .setLngLat([-1.696585806176717, 48.10838773178866])
 .setPopup(popup) // sets a popup on this marker
 .addTo(map);
 
-// Add Navigation Control and Scale Map
+
+    // Add navigation control and scale
   
-map.addControl(new mapboxgl.NavigationControl({position: 'top-left'}));    
-map.addControl(new mapboxgl.ScaleControl({position: 'bottom-right'}));
+var nav = new maplibregl.NavigationControl();
+map.addControl(nav, 'top-left');
+
+var scale = new maplibregl.ScaleControl({
+maxWidth: 80,
+unit: 'metric'
+});
+map.addControl(scale);
+
   
 </script>
  
