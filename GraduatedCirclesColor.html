@@ -2,11 +2,28 @@
   
 <head>
   <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-  <script src="https://cdn.maptiler.com/maplibre-gl-js/v1.13.0-rc.4/mapbox-gl.js"></script>
-  <link href="https://cdn.maptiler.com/maplibre-gl-js/v1.13.0-rc.4/mapbox-gl.css" rel="stylesheet" />
+      <meta charset='utf-8' />
+    <title>MapLibreGL / Graduated Circles Map</title>
+	
+	
+	
+<script src='https://unpkg.com/maplibre-gl@2.1.1/dist/maplibre-gl.js'></script>
+<link href='https://unpkg.com/maplibre-gl@2.1.1/dist/maplibre-gl.css' rel='stylesheet' />
+
 
   <style>
 #map {position: absolute; top: 0; right: 0; bottom: 0; left: 0;}  
+    
+.Mypopup .maplibregl-popup-content {
+      background-color: black;
+      color : white;
+      opacity : 0.9;
+	  height : 200px;
+ 	  width : 170px;
+
+	  }
+    
+    
   </style>
 
   </head>
@@ -18,9 +35,9 @@
    
 <script>
    
-// Map configuration
+      //Appel et configuration de la carte
     
-var map = new mapboxgl.Map({
+var map = new maplibregl.Map({
   container: 'map',
   style: 'https://geoserveis.icgc.cat/contextmaps/positron.json', //Fond de carte 
   zoom: 11.7, // Zoom
@@ -30,7 +47,7 @@ var map = new mapboxgl.Map({
   minZoom:11.7
     });
     
-  // Add data (Geojson)
+  // Ajout des données
       
 map.on('load', function () {   
 
@@ -58,29 +75,31 @@ map.on('load', function () {
             data: 'https://raw.githubusercontent.com/mastersigat/data/main/velib-emplacement-des-stations.geojson' 
         });
 
-// Configure style of bike stations
-
      map.addLayer({
             'id': 'Stations',
             'type': 'circle',
             'source': 'Stations',
-            'paint': {'circle-stroke-color': '#ffffff', 
-                      'circle-stroke-width': 0.6, 
-                      'circle-radius': {property: 'capacity', type: 'exponential', stops: [[0, 0],[100, 20]]},
-                      'circle-color': {property: 'capacity',stops: [[20, '#2c7bb6'],
-																	[30, '#abd9e9'],
-																	[40, '#ffffbf'],
-																	[50, '#fdae61'],
-																	[60, '#d7191c'],]}, 'circle-opacity':0.9
-																	}}
-																	);  
+            'paint': {'circle-stroke-color': 'white', 
+                      'circle-stroke-width': 1, 
+                      'circle-radius': {
+        property: 'capacity',
+        type: 'exponential',
+        stops: [
+          [0, 0],
+          [95, 20]
+        ]
+      },
+                      'circle-color': '#0074D9'}}
+                 );  
+
+		 
 		 
          });
   
   
-  //Interactivity HOVER
+  //Interactivité HOVER
 
-var popup = new mapboxgl.Popup({
+var popup = new maplibregl.Popup({
     className: "Mypopup",
   closeButton: false,
     closeOnClick: false });
@@ -96,16 +115,23 @@ map.on('mousemove', function(e) {
  
     var feature = features[0];
         popup.setLngLat(feature.geometry.coordinates)
-          .setHTML('<b>'+ feature.properties.name + '</b>' + '<br> Bike capacity > ' +  feature.properties.capacity)
-        .addTo(map);
+	  .setHTML('<h2>'+ feature.properties.name + '</h2><hr> <img src="https://img.20mn.fr/E_l1DZgVR-K26DkVcvjpYQ/640x410_velib-paris-illustration.jpg" style="width:70%"><h3>' + 'Bike Capacity: ' + feature.properties.capacity + '</h3>')
+      .addTo(map);
 
 }); 
 
+
     // Add navigation control and scale
   
-map.addControl(new mapboxgl.NavigationControl({position: 'top-left'}));  
-map.addControl(new mapboxgl.ScaleControl({position: 'bottom-right'}));
-  
+var nav = new maplibregl.NavigationControl();
+map.addControl(nav, 'top-left');
+
+var scale = new maplibregl.ScaleControl({
+maxWidth: 80,
+unit: 'metric'
+});
+map.addControl(scale);
+
   
 </script>
     
