@@ -2,20 +2,24 @@
   
 <head>
   <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-  <script src="https://cdn.maptiler.com/maplibre-gl-js/v1.13.0-rc.4/mapbox-gl.js"></script>
-  <link href="https://cdn.maptiler.com/maplibre-gl-js/v1.13.0-rc.4/mapbox-gl.css" rel="stylesheet" />
+      <meta charset='utf-8' />
+    <title>MapLibreGL / Dot Map</title>
+	
+<script src='https://unpkg.com/maplibre-gl@2.1.1/dist/maplibre-gl.js'></script>
+<link href='https://unpkg.com/maplibre-gl@2.1.1/dist/maplibre-gl.css' rel='stylesheet' />
 
   <style>
 #map {position: absolute; top: 0; right: 0; bottom: 0; left: 0;}  
     
-#legend {
-        left : 1%;
+ #legend {
+        position: absolute;
+		left : 3%;
         padding: 10px;
             box-shadow: 0 1px 2px rgba(0,0,0,0.10);
             line-height: 2Opx;
             margin-bottom: 50px;
             width:210px;
-			height: 110px;
+			height: 180px;
 			background-color: #ffffff;
      		opacity: 0.7;
             font-size: 15;
@@ -35,34 +39,36 @@
 
   <body> 
     
-<div id="map"></div>
-<div class='map-overlay' id='legend'><hR><b>311 - Type of report</b> <hR> </div>
+  <div id="map"></div>
+   <div class='map-overlay' id='legend'><hR><h3><b>311 - Type of report</b></h3> <hR><br> </div>
 
    
 <script>
    
-  // Map configuration
+      //Appel et configuration de la carte
     
-var map = new mapboxgl.Map({
+var map = new maplibregl.Map({
   container: 'map',
-  style: 'https://geoserveis.icgc.cat/contextmaps/positron.json', //Basemap 
-  zoom: 12, // Zoom
-  center: [2.335, 48.854],  // Map center
-  pitch: 10, // Inclinaison 
-  bearing: 0,  // Rotation 
-  minZoom:12
+  style: 'https://geoserveis.icgc.cat/contextmaps/positron.json', //Fond de carte 
+  zoom: 11.7, // Zoom
+  center: [2.335, 48.857],  // Centrage carte
+  pitch: 10, // Inclinaison carte
+  bearing: 0,  // Rotation carte
+  minZoom:11.7
     });
-          
+    
+  // Add personnal data (GEOJSON)
+      
 map.on('load', function () {   
    
-  // Legend configuration
+  // Configuration légende
 
   map.getCanvas().style.cursor = 'default';
     map.getCanvas().style.cursor = 'default';
-    var layers = ['<B>Tags</b> > 26 776', '<b>Cleanliness</b> > 31 783', '<b>Bulky objects</b> > 15 925'];
+    var layers = ['<B>Tags</b> > 26 776 reports', '<b>Cleanliness</b> > 31 783 reports', '<b>Bulky objects</b> > 15 925 reports', ' ', 'Source : Ville de Paris'];
     var colors = ['#fbb03b', '#0074D9', '#2ECC40'];
     for (i=0; i<layers.length; i++) {
-        var layer = layers[i] + " reports";
+        var layer = layers[i] + "";
         var color = colors[i];
         var item = document.createElement('div');
         var key = document.createElement('span');
@@ -74,15 +80,12 @@ map.on('load', function () {
         item.appendChild(value);
         legend.appendChild(item);
     }
-     // Add point data layer
+     // ADD reporting layer
   
   map.addSource('Stations', {
             type: 'geojson',
             data: 'https://raw.githubusercontent.com/mastersigat/data/main/DMR.geojson' 
         });
-
-
-     // Dots symbology
 
      map.addLayer({
             'id': 'Stations',
@@ -95,15 +98,15 @@ map.on('load', function () {
                 'circle-color': [
                 'match',
                  ['get', 'type'],
-                    'A', '#fbb03b',
-                    'B', '#0074D9',
-                    'C', '#2ECC40',
-                   /* other */ '#ccc'
+                'A', '#fbb03b',
+                'B', '#0074D9',
+                'C', '#2ECC40',
+                 /* other */ '#ccc'
             ]
         } 
     });
 
-       // Add arrondissements layer
+       // Add arrondissements
 
        map.addSource('lignes', {
             type: 'geojson',
@@ -119,11 +122,18 @@ map.on('load', function () {
      });   
          });
   
-	
+     
     // Add navigation control and scale
   
-map.addControl(new mapboxgl.NavigationControl({position: 'top-left'}));  
-map.addControl(new mapboxgl.ScaleControl({position: 'bottom-right'}));
+var nav = new maplibregl.NavigationControl();
+map.addControl(nav, 'top-left');
+
+var scale = new maplibregl.ScaleControl({
+maxWidth: 80,
+unit: 'metric'
+});
+map.addControl(scale);
+  
   
 </script>
     
