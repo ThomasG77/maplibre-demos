@@ -2,26 +2,26 @@
 <html>
 <head>
 <meta charset='utf-8' />
-<title>Create a heatmap layer</title>
+<title>MapLibreGL / Clusters Map</title>
 <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
- <script src="https://cdn.maptiler.com/maplibre-gl-js/v1.13.0-rc.4/mapbox-gl.js"></script>
-  <link href="https://cdn.maptiler.com/maplibre-gl-js/v1.13.0-rc.4/mapbox-gl.css" rel="stylesheet" />
+	
+<script src='https://unpkg.com/maplibre-gl@2.1.1/dist/maplibre-gl.js'></script>
+<link href='https://unpkg.com/maplibre-gl@2.1.1/dist/maplibre-gl.css' rel='stylesheet' />
+
 
 <style>
+body { margin:0; padding:0; }
 #map { position:absolute; top:0; bottom:0; width:100%; }
 </style>
-
 </head>
-
 <body>
-  
+ 
+ 
 <div id='map'></div>
  
 <script>
 
-// Map configuration
-
-var map = new mapboxgl.Map({
+var map = new maplibregl.Map({
 container: 'map',
 style: 'https://api.maptiler.com/maps/positron/style.json?key=rrASqj6frF6l2rrOFR4A', 
   zoom: 11.7, // Zoom
@@ -31,7 +31,6 @@ style: 'https://api.maptiler.com/maps/positron/style.json?key=rrASqj6frF6l2rrOFR
 });
  
 map.on('load', function() {
-
 
   // Add arrondissements
 
@@ -47,16 +46,16 @@ map.on('load', function() {
             'paint': {'line-width': 1,
                      'line-color': '#AAAAAA'}
      });   
-
-
-  // Add Bike stations data
+  
+  // Add data bike stations
+  
   
 map.addSource('DMR', {
             type: 'geojson',
             data: 'https://raw.githubusercontent.com/mastersigat/data/main/DMR.geojson',
 			cluster: true,
 			clusterMaxZoom: 15,
-			clusterRadius: 45
+			clusterRadius: 40
         });
 
     // Configuration cluster Size and color
@@ -71,8 +70,9 @@ map.addLayer({
 						'#f1f075',2500,
 						'#f28cb1', 5000,
 						'#FF4136'],
+					'circle-stroke-color': '#ffffff',	
 					'circle-radius': ['step',['get', 'point_count'],
-									5,200,10,500,15,1000,25,3000,35,5000,50]}
+									5,200,10,500,15,1000,20,3000,35,5000,45,8000,60]}
 }); 
 
   
@@ -85,16 +85,22 @@ filter: ['has', 'point_count'],
 layout: {
 'text-field': '{point_count_abbreviated}',
 'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
-'text-size': 12}
+'text-size': 13}
 });  
 
     });
   
-   // Add navigation control and scale
-   
-map.addControl(new mapboxgl.NavigationControl({position: 'top-left'}));  
-map.addControl(new mapboxgl.ScaleControl({position: 'bottom-right'}));
   
+    // Add navigation control and scale
+  
+var nav = new maplibregl.NavigationControl();
+map.addControl(nav, 'top-left');
+
+var scale = new maplibregl.ScaleControl({
+maxWidth: 80,
+unit: 'metric'
+});
+map.addControl(scale);
 </script>
  
 </body>
