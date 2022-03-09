@@ -1,40 +1,44 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset='utf-8' />
-    <title></title>
+    <<meta charset='utf-8' />
+    <title>MapLibreGL / 3D Choropleth Map</title>
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-  <script src="https://cdn.maptiler.com/maplibre-gl-js/v1.13.0-rc.4/mapbox-gl.js"></script>
-  <link href="https://cdn.maptiler.com/maplibre-gl-js/v1.13.0-rc.4/mapbox-gl.css" rel="stylesheet" />
+	
+<script src='https://unpkg.com/maplibre-gl@2.1.1/dist/maplibre-gl.js'></script>
+<link href='https://unpkg.com/maplibre-gl@2.1.1/dist/maplibre-gl.css' rel='stylesheet' />
 
     <style>
-#map {position: absolute; top: 0; right: 0; bottom: 0; left: 0;}  
+        #map {position: absolute; top: 0; right: 0; bottom: 0; left: 0;}  
+    
+    .Mypopup .maplibregl-popup-content {
+      background-color: white;
+      color : black;
+      opacity : 0.8;
+}
+
     </style>
-
 </head>
-
 <body>
  
 <div id='map'></div>
 
 <script>
 
-//Map configuration
-
-var map = new mapboxgl.Map({
-  container: 'map', // container id
+//Configuration de la carte
+var map = new maplibregl.Map({
+    container: 'map', // container id
   style: 'https://geoserveis.icgc.cat/contextmaps/positron.json', //Fond de carte 
 	center: [-2.802, 48.1],
 	zoom :7.7,
 	pitch : 40,
 	bearing : 1
 });
-
-
 map.on('style.load', function() {
 
   
     // Add data
+
       
  map.addSource('Municipalities', {
             type: 'geojson',
@@ -43,28 +47,27 @@ map.on('style.load', function() {
  
   
   
-	// Symbology of Municipalities layer (Population 3D and density color)
+	// Municipalities layer
 	
 map.addLayer({
         'id': 'Municipalities',
         'type': 'fill-extrusion',
         'source': 'Municipalities',
         'layout': {'visibility': 'visible'},
-		    'paint': {'fill-extrusion-color': {
-                  'property': 'density',
-                  'stops': [
+		'paint': {'fill-extrusion-color': {
+                  property: 'density',
+                  stops: [
                     [20, '#4d9221'],
                     [50, '#a1d76a'],
                     [100, '#e6f5d0'],
                     [200, '#fde0ef'],
                     [500, '#e9a3c9'],
-					          [1000, '#c51b7d'],]},
-					        'fill-extrusion-height': {
-                  'property': 'POPULATION',
-		              'stops': [
-                    [100, 10],
-					          [100, 100],
-		                [200000, 70000]] },
+					[1000, '#c51b7d'],]},
+					'fill-extrusion-height': {
+        'property': 'POPULATION',
+		    'stops': [[100, 10],
+					  [100, 100],
+		              [200000, 70000]] },
       'fill-extrusion-opacity': 0.95,
       'fill-extrusion-base': 0
     }
@@ -86,13 +89,54 @@ map.addLayer({
                      'line-color': '#111111'}
      });   
     
+		 
 
 		});	 
 
- // Add navigation control and scale
+		
+		
+		// Interactivity configuration (popup)
+
+var popup = new maplibregl.Popup({
+    className: "Mypopup",
+  closeButton: false,
+    closeOnClick: false });
+
+map.on('mousemove', 'Municipalities', function(e) {
+        // Change the cursor style as a UI indicator.
+        map.getCanvas().style.cursor = 'pointer';
+
+        // Single out the first found feature.
+        var feature = e.features[0];
+
+        // Display a popup with the name of the county
+        popup.setLngLat(e.lngLat)
+		.setHTML('<h3>'+ feature.properties.NOM_COM_M + '</h3><hr><h4>'  
+		               + feature.properties.POPULATION + ' habitants <br>' 
+					   + feature.properties.density + ' hab./km2 </h4>')
+        .addTo(map);
+    });
+
+    map.on('mouseleave', 'Municipalities', function() {
+        map.getCanvas().style.cursor = '';
+        popup.remove();
+    });
+
+
+
+
+
+    // Add navigation control and scale
   
-map.addControl(new mapboxgl.NavigationControl({position: 'top-right'}));    
-map.addControl(new mapboxgl.ScaleControl({position: 'bottom-right'}));
+var nav = new maplibregl.NavigationControl();
+map.addControl(nav, 'top-left');
+
+var scale = new maplibregl.ScaleControl({
+maxWidth: 80,
+unit: 'metric'
+});
+map.addControl(scale);
+
   
 </script>
 
