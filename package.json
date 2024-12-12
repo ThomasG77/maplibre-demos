@@ -1,0 +1,15 @@
+{
+  "name": "bmericskay",
+  "version": "1.0.0",
+  "description": "This gitlab page centralizes all the html / css / javascript syntaxes for MapLibreGL-based maps accessible on this website https://sites-formations.univ-rennes2.fr/mastersigat/MaplibreGL",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "js-beautify --type html --indent-size 2 *.html"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "js-beautify": "^1.15.1"
+  }
+}
