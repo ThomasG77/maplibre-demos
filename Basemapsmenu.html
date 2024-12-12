@@ -1,116 +1,133 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta charset="utf-8" />
-    <title>MapLibreGL / Basemap Styles</title>
-<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <meta charset="utf-8" />
+  <title>MapLibreGL / Basemap Styles</title>
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
 
-<script src='https://unpkg.com/maplibre-gl@2.1.1/dist/maplibre-gl.js'></script>
-<link href='https://unpkg.com/maplibre-gl@2.1.1/dist/maplibre-gl.css' rel='stylesheet' />
+  <script src='https://unpkg.com/maplibre-gl@2.1.1/dist/maplibre-gl.js'></script>
+  <link href='https://unpkg.com/maplibre-gl@2.1.1/dist/maplibre-gl.css' rel='stylesheet' />
 
 
-<style>
-	body { margin: 0; padding: 0; }
-	#map { position: absolute; top: 0; bottom: 0; width: 100%; }
-	#menu {
-position: absolute;
-background: #fff;
-padding: 10px;
-font-family: 'Open Sans', sans-serif;
-}
-#marker {
-background-image: url('https://sites-formations.univ-rennes2.fr/mastersigat/images/75709127.png');
-background-size: cover;
-width: 50px;
-height: 50px;
-border-radius: 50%;
-cursor: pointer;}
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
 
-.Mypopup .mapboxgl-popup-content {
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+
+    #menu {
+      position: absolute;
+      background: #fff;
+      padding: 10px;
+      font-family: 'Open Sans', sans-serif;
+    }
+
+    #marker {
+      background-image: url('https://sites-formations.univ-rennes2.fr/mastersigat/images/75709127.png');
+      background-size: cover;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    .Mypopup .mapboxgl-popup-content {
       background-color: black;
-      color : white;
-      opacity : 0.7;}
-
-</style>
+      color: white;
+      opacity: 0.7;
+    }
+  </style>
 </head>
+
 <body>
- 
-<div id="map"></div>
-<div id="menu"><b>Choose your Basemap Style</b> <hr>
 
-<input id="https://api.maptiler.com/maps/voyager/style.json?key=rrASqj6frF6l2rrOFR4A" type="radio" name="rtoggle" value="Night" checked />Voyager
-<input id="https://api.maptiler.com/maps/pastel/style.json?key=rrASqj6frF6l2rrOFR4A" type="radio" name="rtoggle" value="Night" />Pastel
-<input id="https://api.maptiler.com/maps/toner/style.json?key=rrASqj6frF6l2rrOFR4A" type="radio" name="rtoggle" value="Night" />Toner
-<input id="https://geoserveis.icgc.cat/contextmaps/hibrid.json" type="radio" name="rtoggle" value="Hibrid" />Hibrid
-<input id="https://geoserveis.icgc.cat/contextmaps/osm-bright.json" type="radio" name="rtoggle" value="OSMbright"  />OSM-Bright
-<input id="https://geoserveis.icgc.cat/contextmaps/icgc.json" type="radio" name="rtoggle" value="ICGC" />ICGC
-<input id="https://geoserveis.icgc.cat/contextmaps/positron.json" type="radio" name="rtoggle" value="Positron" />Positron
-<input id="https://geoserveis.icgc.cat/contextmaps/fulldark.json" type="radio" name="rtoggle" value="Fulldark" />Fulldark
-<input id="https://geoserveis.icgc.cat/contextmaps/night.json" type="radio" name="rtoggle" value="Night" />Night
+  <div id="map"></div>
+  <div id="menu"><b>Choose your Basemap Style</b>
+    <hr>
 
-</div>
-<script>
+    <input id="https://api.maptiler.com/maps/voyager/style.json?key=rrASqj6frF6l2rrOFR4A" type="radio" name="rtoggle" value="Night" checked />Voyager
+    <input id="https://api.maptiler.com/maps/pastel/style.json?key=rrASqj6frF6l2rrOFR4A" type="radio" name="rtoggle" value="Night" />Pastel
+    <input id="https://api.maptiler.com/maps/toner/style.json?key=rrASqj6frF6l2rrOFR4A" type="radio" name="rtoggle" value="Night" />Toner
+    <input id="https://geoserveis.icgc.cat/contextmaps/hibrid.json" type="radio" name="rtoggle" value="Hibrid" />Hibrid
+    <input id="https://geoserveis.icgc.cat/contextmaps/osm-bright.json" type="radio" name="rtoggle" value="OSMbright" />OSM-Bright
+    <input id="https://geoserveis.icgc.cat/contextmaps/icgc.json" type="radio" name="rtoggle" value="ICGC" />ICGC
+    <input id="https://geoserveis.icgc.cat/contextmaps/positron.json" type="radio" name="rtoggle" value="Positron" />Positron
+    <input id="https://geoserveis.icgc.cat/contextmaps/fulldark.json" type="radio" name="rtoggle" value="Fulldark" />Fulldark
+    <input id="https://geoserveis.icgc.cat/contextmaps/night.json" type="radio" name="rtoggle" value="Night" />Night
 
+  </div>
+  <script>
+    var map = new maplibregl.Map({
+      container: 'map',
+      style: 'https://api.maptiler.com/maps/voyager/style.json?key=rrASqj6frF6l2rrOFR4A', //Fond de carte 
+      zoom: 14,
+      center: [-1.68, 48.1272]
+    });
 
-var map = new maplibregl.Map({
-container: 'map',
-style: 'https://api.maptiler.com/maps/voyager/style.json?key=rrASqj6frF6l2rrOFR4A', //Fond de carte 
-zoom: 14,
-center: [-1.68, 48.1272]
-});
- 
-var layerList = document.getElementById('menu');
-var inputs = layerList.getElementsByTagName('input');
- 
-function switchLayer(layer) {
-var layerId = layer.target.id;
-map.setStyle(layerId);
-}
- 
-for (var i = 0; i < inputs.length; i++) {
-inputs[i].onclick = switchLayer;
-}
+    var layerList = document.getElementById('menu');
+    var inputs = layerList.getElementsByTagName('input');
 
+    function switchLayer(layer) {
+      var layerId = layer.target.id;
+      map.setStyle(layerId);
+    }
 
-// create the popup
-var popup = new maplibregl.Popup({ className: "Mypopup", closeButton: false, closeOnClick: true, offset: 25 }).setText('The another great place of Rennes');
- 
-// create DOM element for the marker
-var el = document.createElement('div');
-el.id = 'marker';
-
-// create the marker
-new maplibregl.Marker(el)
-.setLngLat([-1.6791, 48.1283])
-.setPopup(popup) // sets a popup on this marker
-.addTo(map);
+    for (var i = 0; i < inputs.length; i++) {
+      inputs[i].onclick = switchLayer;
+    }
 
 
+    // create the popup
+    var popup = new maplibregl.Popup({
+      className: "Mypopup",
+      closeButton: false,
+      closeOnClick: true,
+      offset: 25
+    }).setText('The another great place of Rennes');
 
-// Add geolocate control to the map.
-map.addControl(
-new maplibregl.GeolocateControl({
-positionOptions: {
-enableHighAccuracy: true
-},
-trackUserLocation: true
-})
-);
+    // create DOM element for the marker
+    var el = document.createElement('div');
+    el.id = 'marker';
 
-
-// Add navigation control and scale
-  
-var nav = new maplibregl.NavigationControl();
-map.addControl(nav, 'top-left');
-
-var scale = new maplibregl.ScaleControl({
-maxWidth: 80,
-unit: 'metric'
-});
-map.addControl(scale);
+    // create the marker
+    new maplibregl.Marker(el)
+      .setLngLat([-1.6791, 48.1283])
+      .setPopup(popup) // sets a popup on this marker
+      .addTo(map);
 
 
-</script>
- 
+
+    // Add geolocate control to the map.
+    map.addControl(
+      new maplibregl.GeolocateControl({
+        positionOptions: {
+          enableHighAccuracy: true
+        },
+        trackUserLocation: true
+      })
+    );
+
+
+    // Add navigation control and scale
+
+    var nav = new maplibregl.NavigationControl();
+    map.addControl(nav, 'top-left');
+
+    var scale = new maplibregl.ScaleControl({
+      maxWidth: 80,
+      unit: 'metric'
+    });
+    map.addControl(scale);
+  </script>
+
 </body>
+
 </html

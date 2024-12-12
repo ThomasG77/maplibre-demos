@@ -1,103 +1,110 @@
 <html>
-  
+
 <head>
   <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-      <meta charset='utf-8' />
-    <title>MapLibreGL / Heatmap</title>
-	
-<script src='https://unpkg.com/maplibre-gl@2.1.1/dist/maplibre-gl.js'></script>
-<link href='https://unpkg.com/maplibre-gl@2.1.1/dist/maplibre-gl.css' rel='stylesheet' />
+  <meta charset='utf-8' />
+  <title>MapLibreGL / Heatmap</title>
+
+  <script src='https://unpkg.com/maplibre-gl@2.1.1/dist/maplibre-gl.js'></script>
+  <link href='https://unpkg.com/maplibre-gl@2.1.1/dist/maplibre-gl.css' rel='stylesheet' />
 
 
   <style>
-#map {position: absolute; top: 0; right: 0; bottom: 0; left: 0;}     
+    #map {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+    }
   </style>
 
-  </head>
+</head>
 
 
 
-  <body> 
-    
+<body>
+
   <div id="map"></div>
-  
-   
-<script>
-   
-      //Add map
-    
-var map = new maplibregl.Map({
-  container: 'map',
-  style: 'https://geoserveis.icgc.cat/contextmaps/positron.json', //Fond de carte 
-  zoom: 11.7, // Zoom
-  center: [2.335, 48.858],  // Centrage carte
-  pitch: 10, // Inclinaison carte
-  bearing: 0,  // Rotation carte
-  minZoom:11.7
+
+
+  <script>
+    //Add map
+
+    var map = new maplibregl.Map({
+      container: 'map',
+      style: 'styles/positron.json', //Fond de carte 
+      zoom: 11.7, // Zoom
+      center: [2.335, 48.858], // Centrage carte
+      pitch: 10, // Inclinaison carte
+      bearing: 0, // Rotation carte
+      minZoom: 11.7
     });
-     
-  // Add personnal data (GEOJSON)
-      
-map.on('load', function () {   
-   
 
-     // Add data layer
-  
-  map.addSource('DMR', {
-            type: 'geojson',
-            data: 'https://raw.githubusercontent.com/mastersigat/data/main/DMR.geojson'
-        });
+    // Add personnal data (GEOJSON)
 
-	// Configure Heatmap
-map.addLayer({
-"id": "horodateurs",
-"type": "heatmap",
-"source": "DMR",
+    map.on('load', function() {
 
-"paint": {
 
-// Increase the heatmap color weight weight by zoom level
-"heatmap-intensity": ["interpolate",["linear"],
-                     ["zoom"],1, 0,16,3],
+      // Add data layer
 
-// Color ramp for heatmap.  Domain is 0 (low) to 1 (high).
-"heatmap-color": ["interpolate",["linear"],
-                 ["heatmap-density"],
-                    0, "rgba(33,102,172,0)",
-                    0.2, "rgb(103,169,207)",
-                    0.5, "rgb(209,229,240)",
-                    0.8, "rgb(253,219,199)",
-                    0.9, "rgb(239,138,98)",
-                    1, "rgb(178,24,43)"],
-                    
-// Adjust the heatmap radius by zoom level
-"heatmap-radius": ["interpolate",["linear"],
-                  ["zoom"],0, 0,12, 2.3, 15,15],
-                  
-// Transition from heatmap to circle layer by zoom level
-"heatmap-opacity": ["interpolate",["linear"],
-                   ["zoom"],12, 1,15, 0.7],}
-                   
-});
+      map.addSource('DMR', {
+        type: 'geojson',
+        data: 'https://raw.githubusercontent.com/mastersigat/data/main/DMR.geojson'
+      });
 
-});
+      // Configure Heatmap
+      map.addLayer({
+        "id": "horodateurs",
+        "type": "heatmap",
+        "source": "DMR",
+
+        "paint": {
+
+          // Increase the heatmap color weight weight by zoom level
+          "heatmap-intensity": ["interpolate", ["linear"],
+            ["zoom"], 1, 0, 16, 3
+          ],
+
+          // Color ramp for heatmap.  Domain is 0 (low) to 1 (high).
+          "heatmap-color": ["interpolate", ["linear"],
+            ["heatmap-density"],
+            0, "rgba(33,102,172,0)",
+            0.2, "rgb(103,169,207)",
+            0.5, "rgb(209,229,240)",
+            0.8, "rgb(253,219,199)",
+            0.9, "rgb(239,138,98)",
+            1, "rgb(178,24,43)"
+          ],
+
+          // Adjust the heatmap radius by zoom level
+          "heatmap-radius": ["interpolate", ["linear"],
+            ["zoom"], 0, 0, 12, 2.3, 15, 15
+          ],
+
+          // Transition from heatmap to circle layer by zoom level
+          "heatmap-opacity": ["interpolate", ["linear"],
+            ["zoom"], 12, 1, 15, 0.7
+          ],
+        }
+
+      });
+
+    });
 
 
     // Add navigation control and scale
-  
-var nav = new maplibregl.NavigationControl();
-map.addControl(nav, 'top-left');
 
-var scale = new maplibregl.ScaleControl({
-maxWidth: 80,
-unit: 'metric'
-});
-map.addControl(scale);
+    var nav = new maplibregl.NavigationControl();
+    map.addControl(nav, 'top-left');
 
-  
-  
-  
-</script>
-    
+    var scale = new maplibregl.ScaleControl({
+      maxWidth: 80,
+      unit: 'metric'
+    });
+    map.addControl(scale);
+  </script>
+
 </body>
+
 </html>

@@ -1,112 +1,118 @@
 <html>
-  
+
 <head>
   <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-  
+
   <title>MapLibre Final</title>
 
-<script src="https://unpkg.com/maplibre-gl@2.1.1/dist/maplibre-gl.js"></script>
-<link href="https://unpkg.com/maplibre-gl@2.1.1/dist/maplibre-gl.css" rel="stylesheet" />
+  <script src="https://unpkg.com/maplibre-gl@2.1.1/dist/maplibre-gl.js"></script>
+  <link href="https://unpkg.com/maplibre-gl@2.1.1/dist/maplibre-gl.css" rel="stylesheet" />
   <style>
-#map {position: absolute; top: 0; right: 0; bottom: 0; left: 0;}  
-    
-.hover .mapboxgl-popup-content {
-background-color: black;
-color : white;
-opacity : 0.8;
-}
-    
-.menu {
-     position: absolute;
-     top: 10px;
-     left: 50px;
-     width: 180px;
-     background-color: #FFFFFF;
-     opacity: 0.89;
-     color: #000000;
-     font: 13px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
-      padding:10;
-        }
+    #map {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+    }
 
-#legend {
-     position: absolute;
-	  left : 1%;
+    .hover .mapboxgl-popup-content {
+      background-color: black;
+      color: white;
+      opacity: 0.8;
+    }
+
+    .menu {
+      position: absolute;
+      top: 10px;
+      left: 50px;
+      width: 180px;
+      background-color: #FFFFFF;
+      opacity: 0.89;
+      color: #000000;
+      font: 13px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+      padding: 10;
+    }
+
+    #legend {
+      position: absolute;
+      left: 1%;
       bottom: 2%;
       padding: 10px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.10);
-            line-height: 19px;
-            height: 180px;
-            width:180px;
-            margin-bottom: 50px;
-			background-color: #292929;
-     		opacity: 0.8;
-            font-size: 15;
-			color : #FFFFFF;
-        }
-        .legend-key {
-            display:inline-block;
-            border-radius: 30%;
-			border-color : #000000;
-            width: 15px;
-            height: 12px;
-            margin-right: 5px;
-        }
-  
-    
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.10);
+      line-height: 19px;
+      height: 180px;
+      width: 180px;
+      margin-bottom: 50px;
+      background-color: #292929;
+      opacity: 0.8;
+      font-size: 15;
+      color: #FFFFFF;
+    }
+
+    .legend-key {
+      display: inline-block;
+      border-radius: 30%;
+      border-color: #000000;
+      width: 15px;
+      height: 12px;
+      margin-right: 5px;
+    }
   </style>
 
-  </head>
+</head>
 
-  <body> 
-    
+<body>
+
   <div id="map"></div>
-      <div class='menu'>
+  <div class='menu'>
     <hr>
-<label class="categoryLabel"><B>Données Réferentielles</B></label>
-          <br>
- <input type="checkbox" id="Batiments" value="Batiments" onchange="switchlayer('Batiments')" checked/>
-<label for="Batiments">Batiments</label>
-          <hr>
-<label class="categoryLabel"><B>Données TC</B></label>
-          <br>
-<input type="checkbox" id="Metros" value="Metros" onchange="switchlayer('Metros')" checked/>
-<label for="Metros">Stations de métro</label>
-          <br>
-<input type="checkbox" id="Metrosaxe" value="Metrosaxe" onchange="switchlayer('Metrosaxe')" checked/>
-<label for="Metrosaxe">Lignes de métro</label>
-  <hr>
-</div>
-  <div class='map-overlay' id='legend'><b>Buildings heights (m)</b> <hR> </div>
-  
-  
-   
+    <label class="categoryLabel"><B>DonnÃ©es RÃ©ferentielles</B></label>
+    <br>
+    <input type="checkbox" id="Batiments" value="Batiments" onchange="switchlayer('Batiments')" checked />
+    <label for="Batiments">Batiments</label>
+    <hr>
+    <label class="categoryLabel"><B>DonnÃ©es TC</B></label>
+    <br>
+    <input type="checkbox" id="Metros" value="Metros" onchange="switchlayer('Metros')" checked />
+    <label for="Metros">Stations de mÃ©tro</label>
+    <br>
+    <input type="checkbox" id="Metrosaxe" value="Metrosaxe" onchange="switchlayer('Metrosaxe')" checked />
+    <label for="Metrosaxe">Lignes de mÃ©tro</label>
+    <hr>
+  </div>
+  <div class='map-overlay' id='legend'><b>Buildings heights (m)</b>
+    <hR>
+  </div>
 
-<script>
-   
-      //Appel et configuration de la carte
-    
-var map = new maplibregl.Map({
-  container: 'map',
-  style: 'https://openmaptiles.geo.data.gouv.fr/styles/osm-bright/style.json', //Fond de carte 
-  zoom: 15.3, // Zoom
-  center: [-1.68, 48.106],  // Centrage carte
-  pitch: 60, // Inclinaison carte
-  bearing: -50,  // Rotation carte
-  minZoom:14.5
+
+
+
+  <script>
+    //Appel et configuration de la carte
+
+    var map = new maplibregl.Map({
+      container: 'map',
+      style: 'https://openmaptiles.geo.data.gouv.fr/styles/osm-bright/style.json', //Fond de carte 
+      zoom: 15.3, // Zoom
+      center: [-1.68, 48.106], // Centrage carte
+      pitch: 60, // Inclinaison carte
+      bearing: -50, // Rotation carte
+      minZoom: 14.5
     });
-    
-  // Ajout des données
-      
-map.on('load', function () {   
+
+    // Ajout des donnÃ©es
+
+    map.on('load', function() {
 
 
-// Configuration légende
+      // Configuration lÃ©gende
 
-  map.getCanvas().style.cursor = 'default';
-    map.getCanvas().style.cursor = 'default';
-    var layers = ['-5 m', '5-7 m', '7-9 km', '9-12 m', '12-16 m', '16-20m', '+ 20 m'];
-    var colors = ['#1a9850', '#91cf60', '#d9ef8b', 'ffffbf', '#fee08b', '#fc8d59', '#d73027'];
-    for (i=0; i<layers.length; i++) {
+      map.getCanvas().style.cursor = 'default';
+      map.getCanvas().style.cursor = 'default';
+      var layers = ['-5 m', '5-7 m', '7-9 km', '9-12 m', '12-16 m', '16-20m', '+ 20 m'];
+      var colors = ['#1a9850', '#91cf60', '#d9ef8b', 'ffffbf', '#fee08b', '#fc8d59', '#d73027'];
+      for (i = 0; i < layers.length; i++) {
         var layer = layers[i] + "";
         var color = colors[i];
         var item = document.createElement('div');
@@ -118,136 +124,165 @@ map.on('load', function () {
         item.appendChild(key);
         item.appendChild(value);
         legend.appendChild(item);
+      }
+
+
+      //BATIMENTS 
+
+      map.addSource('Batiments', {
+        type: 'geojson',
+        data: 'https://raw.githubusercontent.com/mastersigat/data/main/BatiRennes.geojson'
+      });
+
+      map.addLayer({
+        'id': 'Batiments',
+        'type': 'fill-extrusion',
+        'source': 'Batiments',
+        'paint': {
+          'fill-extrusion-color': '#A9A9A9',
+          'fill-extrusion-height': {
+            'type': 'identity',
+            'property': 'HAUTEUR'
+          },
+          'fill-extrusion-color': {
+            'property': 'HAUTEUR',
+            'stops': [
+              [5, '#1a9850'],
+              [7, '#91cf60'],
+              [9, '#d9ef8b'],
+              [12, '#ffffbf'],
+              [16, '#fee08b'],
+              [20, '#fc8d59'],
+              [30, '#d73027']
+            ]
+          },
+          'fill-extrusion-opacity': 0.7,
+          'fill-extrusion-base': 0
+        }
+      });
+
+
+      // lignes de metros
+
+      map.addSource('Metrosaxe', {
+        type: 'geojson',
+        data: 'https://raw.githubusercontent.com/mastersigat/data/main/metro-du-reseau-star-traces-de-laxe-des-lignes.geojson'
+      });
+
+
+      map.addLayer({
+        'id': 'Metrosaxe',
+        'type': 'line',
+        'source': 'Metrosaxe',
+        'layout': {
+          'visibility': 'visible'
+        },
+        'paint': {
+          'line-color': ['match', ['get', 'ligne'],
+            'a', '#FF4136',
+            'b', '#0074D9',
+            '#ccc'
+          ],
+          'line-width': 5
+        }
+      });
+
+
+
+      // Station de metros
+
+      map.addSource('Metros', {
+        type: 'geojson',
+        data: 'https://raw.githubusercontent.com/mastersigat/data/main/metro-du-reseau-star-localisation-des-stations.geojson'
+      });
+
+
+      map.addLayer({
+        'id': 'Metros',
+        'type': 'circle',
+        'source': 'Metros',
+        'layout': {
+          'visibility': 'visible'
+        },
+        'paint': {
+          'circle-radius': {
+            'base': 1.5,
+            'stops': [
+              [13, 6],
+              [22, 40]
+            ]
+          },
+          'circle-color': ['match', ['get', 'ligne'],
+            'a', '#FF4136',
+            'b', '#0074D9',
+            '#ccc'
+          ],
+          "circle-stroke-color": "white",
+          "circle-stroke-width": 2
+        }
+      });
+
+    });
+
+
+    switchlayer = function(lname) {
+      if (document.getElementById(lname + "CB").checked) {
+        map.setLayoutProperty(lname, 'visibility', 'visible');
+      } else {
+        map.setLayoutProperty(lname, 'visibility', 'none');
+      }
     }
 
 
-   //BATIMENTS 
 
-map.addSource('Batiments', {
-        type: 'geojson',
-        data: 'https://raw.githubusercontent.com/mastersigat/data/main/BatiRennes.geojson'
+    // HOVER stations de metros
+
+    var popup = new maplibregl.Popup({
+      className: "hover",
+      closeButton: false,
+      closeOnClick: false
     });
- 
-map.addLayer({
-    'id': 'Batiments',
-    'type': 'fill-extrusion',
-    'source': 'Batiments',
-	'paint': 
-	{'fill-extrusion-color': '#A9A9A9', 
-        'fill-extrusion-height':{'type': 'identity','property': 'HAUTEUR'},
-        'fill-extrusion-color': {
-        'property': 'HAUTEUR',
-        'stops': [
-          [5, '#1a9850'],
-          [7, '#91cf60'],
-          [9, '#d9ef8b'],
-          [12, '#ffffbf'],
-      	  [16, '#fee08b'],
-	      [20, '#fc8d59'],
-          [30, '#d73027']]},
-	 'fill-extrusion-opacity': 0.7,
-         'fill-extrusion-base': 0}
+
+    map.on('mousemove', function(e) {
+      var features = map.queryRenderedFeatures(e.point, {
+        layers: ['Metros']
+      });
+      // Change the cursor style as a UI indicator.
+      map.getCanvas().style.cursor = (features.length) ? 'pointer' : '';
+      if (!features.length) {
+        popup.remove();
+        return;
+      }
+      var feature = features[0];
+      popup.setLngLat(feature.geometry.coordinates)
+        .setHTML('<h2>' + feature.properties.nom + '</h2><hr> <img src="https://www.marignan-immobilier.com/media/images/37143/landscape/w568/1622724280/M%C3%A9tro_Rennes.jpg" style="width:70%"><h3>' + 'Ligne: ' + feature.properties.ligne + '</h3>')
+        .addTo(map);
     });
-   
-    
-// lignes de metros
-
-map.addSource('Metrosaxe', {
-type: 'geojson',
-data: 'https://raw.githubusercontent.com/mastersigat/data/main/metro-du-reseau-star-traces-de-laxe-des-lignes.geojson'});
-
-
-map.addLayer({
-'id': 'Metrosaxe',
-'type': 'line',
-'source': 'Metrosaxe',
-'layout': {'visibility': 'visible'},
-'paint': {'line-color': ['match',['get', 'ligne'],
-								  'a', '#FF4136',
-                                  'b', '#0074D9',
-								  '#ccc'], 
-'line-width':5}
-});
 
 
 
-// Station de metros
-
-map.addSource('Metros', {
-type: 'geojson',
-data: 'https://raw.githubusercontent.com/mastersigat/data/main/metro-du-reseau-star-localisation-des-stations.geojson'});
-
-
-map.addLayer({
-'id': 'Metros',
-'type': 'circle',
-'source': 'Metros',
-'layout': {'visibility': 'visible'},
-'paint': {'circle-radius': {'base': 1.5,'stops': [[13, 6], [22, 40]]}, 'circle-color': ['match',['get', 'ligne'],
-								  'a', '#FF4136',
-                                  'b', '#0074D9',
-								  '#ccc'], 
-								  "circle-stroke-color": "white",
-								  "circle-stroke-width": 2}
-});
-
-});
+    // Configuration affichage menu couches
+    switchlayer = function(lname) {
+      if (document.getElementById(lname).checked) {
+        map.setLayoutProperty(lname, 'visibility', 'visible');
+      } else {
+        map.setLayoutProperty(lname, 'visibility', 'none');
+      }
+    };
 
 
- switchlayer = function (lname) {
-            if (document.getElementById(lname + "CB").checked) {
-                map.setLayoutProperty(lname, 'visibility', 'visible');
-            } else {
-                map.setLayoutProperty(lname, 'visibility', 'none');
-           }
-        }
-		
-		
-
-// HOVER stations de metros
-
-var popup = new maplibregl.Popup({
-className: "hover",
-closeButton: false,
-closeOnClick: false });
-
-map.on('mousemove', function(e) {
-var features = map.queryRenderedFeatures(e.point, { layers: ['Metros'] });
-// Change the cursor style as a UI indicator.
-map.getCanvas().style.cursor = (features.length) ? 'pointer' : '';
-if (!features.length) {
-popup.remove();
-return; }
-var feature = features[0];
-popup.setLngLat(feature.geometry.coordinates)
-.setHTML('<h2>'+ feature.properties.nom + '</h2><hr> <img src="https://www.marignan-immobilier.com/media/images/37143/landscape/w568/1622724280/M%C3%A9tro_Rennes.jpg" style="width:70%"><h3>' + 'Ligne: ' + feature.properties.ligne + '</h3>')
-.addTo(map);
-});
-
-
-
-  // Configuration affichage menu couches
- switchlayer = function (lname) {
-            if (document.getElementById(lname ).checked) {
-                map.setLayoutProperty(lname, 'visibility', 'visible');
-            } else {
-                map.setLayoutProperty(lname, 'visibility', 'none');
-           }
-        };
-  
-	  
     // Add navigation control and scale
-  
-var nav = new maplibregl.NavigationControl();
-map.addControl(nav, 'top-left');
 
-var scale = new maplibregl.ScaleControl({
-maxWidth: 80,
-unit: 'metric'
-});
-map.addControl(scale);
+    var nav = new maplibregl.NavigationControl();
+    map.addControl(nav, 'top-left');
 
-</script>
-    
+    var scale = new maplibregl.ScaleControl({
+      maxWidth: 80,
+      unit: 'metric'
+    });
+    map.addControl(scale);
+  </script>
+
 </body>
+
 </html>

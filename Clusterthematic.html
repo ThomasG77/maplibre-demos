@@ -1,329 +1,339 @@
 <html>
-  
+
 <head>
   <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-    <meta charset='utf-8' />
-    <title>MapLibreGL / Thematic Clusters Map</title>
-	
-<script src='https://unpkg.com/maplibre-gl@2.1.1/dist/maplibre-gl.js'></script>
-<link href='https://unpkg.com/maplibre-gl@2.1.1/dist/maplibre-gl.css' rel='stylesheet' />
+  <meta charset='utf-8' />
+  <title>MapLibreGL / Thematic Clusters Map</title>
+
+  <script src='https://unpkg.com/maplibre-gl@2.1.1/dist/maplibre-gl.js'></script>
+  <link href='https://unpkg.com/maplibre-gl@2.1.1/dist/maplibre-gl.css' rel='stylesheet' />
 
   <style>
-#map {position: absolute; top: 0; right: 0; bottom: 0; left: 0;}  
-    
-#legend {
-        position: absolute;
-		left : 50px;
-        padding: 10px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.10);
-            line-height: 2Opx;
-            margin-bottom: 50px;
-            width:175px;
-			height: 80px;
-			background-color: #ffffff;
-     		opacity: 0.7;
-            font-size: 17;
-        }
-        .legend-key {
-            display:inline-block;
-            border-radius: 20%;
-            width: 20px;
-            height: 20px;
-            margin-right: 5px;
-        }
-    
+    #map {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+    }
+
+    #legend {
+      position: absolute;
+      left: 50px;
+      padding: 10px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.10);
+      line-height: 2Opx;
+      margin-bottom: 50px;
+      width: 175px;
+      height: 80px;
+      background-color: #ffffff;
+      opacity: 0.7;
+      font-size: 17;
+    }
+
+    .legend-key {
+      display: inline-block;
+      border-radius: 20%;
+      width: 20px;
+      height: 20px;
+      margin-right: 5px;
+    }
   </style>
 
-  </head>
+</head>
 
-  <body> 
-    
+<body>
+
   <div id="map"></div>
   <div class='map-overlay' id='legend'></div>
 
-   
-<script>
 
-      //Map configuration
+  <script>
+    //Map configuration
 
-var map = new maplibregl.Map({
-  container: 'map',
-  style: 'https://geoserveis.icgc.cat/contextmaps/positron.json', //Fond de carte 
-  zoom: 11.7, // Zoom
-  center: [2.335, 48.854],  // Centrage carte
-  pitch: 10, // Inclinaison carte
-  bearing: 0,  // Rotation carte
-  minZoom:11.7,
-  maxZoom:17
+    var map = new maplibregl.Map({
+      container: 'map',
+      style: 'styles/positron.json', //Fond de carte 
+      zoom: 11.7, // Zoom
+      center: [2.335, 48.854], // Centrage carte
+      pitch: 10, // Inclinaison carte
+      bearing: 0, // Rotation carte
+      minZoom: 11.7,
+      maxZoom: 17
     });
- 
-// Configuration Legend
 
-  map.getCanvas().style.cursor = 'default';
+    // Configuration Legend
+
+    map.getCanvas().style.cursor = 'default';
     map.getCanvas().style.cursor = 'default';
     var layers = ['<B>Tags</b>', '<b>Cleanliness</b>', '<b>Bulky objects</b>'];
     var colors = ['#fbb03b', '#0074D9', '#2ECC40'];
-    for (i=0; i<layers.length; i++) {
-        var layer = layers[i] + "";
-        var color = colors[i];
-        var item = document.createElement('div');
-        var key = document.createElement('span');
-        key.className = 'legend-key';
-        key.style.backgroundColor = color;
-        var value = document.createElement('span');
-        value.innerHTML = layer;
-        item.appendChild(key);
-        item.appendChild(value);
-        legend.appendChild(item);
+    for (i = 0; i < layers.length; i++) {
+      var layer = layers[i] + "";
+      var color = colors[i];
+      var item = document.createElement('div');
+      var key = document.createElement('span');
+      key.className = 'legend-key';
+      key.style.backgroundColor = color;
+      var value = document.createElement('span');
+      value.innerHTML = layer;
+      item.appendChild(key);
+      item.appendChild(value);
+      legend.appendChild(item);
     }
-	
-
-// Thematic cluster variables
-
-var mag1 = ['match',['get', 'type'],
-                ['A'],
-                false,
-                true
-              ];
-var mag2 = [
-                'match',
-                ['get', 'type'],
-                ['B'],
-                false,
-                true
-              ];
- 
- var mag3 = [
-                'match',
-                ['get', 'type'],
-                ['C'],
-                false,
-                true
-              ];
- 
- 
-var colors = ['#fbb03b', '#0074D9', '#2ECC40'];
 
 
-   
-  // Add personnal data (GEOJSON)
-      
-map.on('load', function () {   
-   
+    // Thematic cluster variables
 
-     // Add arrondissements
+    var mag1 = ['match', ['get', 'type'],
+      ['A'],
+      false,
+      true
+    ];
+    var mag2 = [
+      'match',
+      ['get', 'type'],
+      ['B'],
+      false,
+      true
+    ];
 
-       map.addSource('lignes', {
-            type: 'geojson',
-            data: 'https://raw.githubusercontent.com/mastersigat/data/main/arrondissements.geojson' 
-        });
-
-     map.addLayer({
-            'id': 'Lignes',
-            'type': 'line',
-            'source': 'lignes',
-            'paint': {'line-width': 1,
-                     'line-color': '#AAAAAA'}
-     });   
-     
-
-     // ADD reporting layer
-  
-  map.addSource('earthquakes', {
-            type: 'geojson',
-            data: 'https://raw.githubusercontent.com/mastersigat/data/main/DMR.geojson',
-  cluster: true,
-  clusterMaxZoom: 16,
-  clusterRadius: 50,
-  'clusterProperties': {
-// keep separate counts for each magnitude category in a cluster
-'mag1': ['+', ['case', mag1, 1, 0]],
-'mag2': ['+', ['case', mag2, 1, 0]],
-'mag3': ['+', ['case', mag3, 1, 0]]
-}
-        });
+    var mag3 = [
+      'match',
+      ['get', 'type'],
+      ['C'],
+      false,
+      true
+    ];
 
 
-// Cluster Labels
+    var colors = ['#fbb03b', '#0074D9', '#2ECC40'];
 
-map.addLayer({
-'id': 'earthquake_label',
-'type': 'symbol',
-'source': 'earthquakes',
-'filter': ['!=', 'cluster', true],
-'layout': {
-'text-field': [
-'number-format',
-['get', 'mag'],
-{ 'min-fraction-digits': 0, 'max-fraction-digits': 0 }
-],
-'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
-'text-size': 1
-},
-'paint': {
-'text-color': [
-'case',
-['<', ['get', 'mag'], 1],
-'black',
-'white'
-]
-}
-});
- 
-var markers = {};
-var markersOnScreen = {};
- 
-function updateMarkers() {
-var newMarkers = {};
-var features = map.querySourceFeatures('earthquakes');
- 
 
-for (var i = 0; i < features.length; i++) {
-var coords = features[i].geometry.coordinates;
-var props = features[i].properties;
-if (!props.cluster) continue;
-var id = props.cluster_id;
- 
-var marker = markers[id];
-if (!marker) {
-var el = createDonutChart(props);
-marker = markers[id] = new maplibregl.Marker({
-element: el
-}).setLngLat(coords);
-}
-newMarkers[id] = marker;
- 
-if (!markersOnScreen[id]) marker.addTo(map);
-}
 
-for (id in markersOnScreen) {
-if (!newMarkers[id]) markersOnScreen[id].remove();
-}
-markersOnScreen = newMarkers;
-}
- 
-map.on('data', function (e) {
-if (e.sourceId !== 'earthquakes' || !e.isSourceLoaded) return;
- 
-map.on('move', updateMarkers);
-map.on('moveend', updateMarkers);
-updateMarkers();
-});
-});
- 
-function createDonutChart(props) {
-var offsets = [];
-var counts = [
-props.mag1,
-props.mag2,
-props.mag3
-];
-var total = 0;
-for (var i = 0; i < counts.length; i++) {
-offsets.push(total);
-total += counts[i];
-}
-var fontSize =
-total >= 1000 ? 15 : total >= 100 ? 12 : total >= 6 ? 10 : 5;
-var r = total >= 20000 ? 50 : total >= 10000 ? 40 : total >= 5000 ? 30 : total >= 100 ? 20 : 15;
-var r0 = Math.round(r * 0.6);
-var w = r * 2;
- 
-var html =
-'<div><svg width="' +
-w +
-'" height="' +
-w +
-'" viewbox="0 0 ' +
-w +
-' ' +
-w +
-'" text-anchor="middle" style="font: ' +
-fontSize +
-'px sans-serif; display: block">';
- 
-for (i = 0; i < counts.length; i++) {
-html += donutSegment(
-offsets[i] / total,
-(offsets[i] + counts[i]) / total,
-r,
-r0,
-colors[i]
-);
-}
-html +=
-'<circle cx="' +
-r +
-'" cy="' +
-r +
-'" r="' +
-r0 +
-'" fill="white" /><text dominant-baseline="central" transform="translate(' +
-r +
-', ' +
-r +
-')">' +
-total.toLocaleString() +
-'</text></svg></div>';
- 
-var el = document.createElement('div');
-el.innerHTML = html;
-return el.firstChild;
-}
- 
-function donutSegment(start, end, r, r0, color) {
-if (end - start === 1) end -= 0.00001;
-var a0 = 2 * Math.PI * (start - 0.25);
-var a1 = 2 * Math.PI * (end - 0.25);
-var x0 = Math.cos(a0),
-y0 = Math.sin(a0);
-var x1 = Math.cos(a1),
-y1 = Math.sin(a1);
-var largeArc = end - start > 0.5 ? 1 : 0;
- 
-return [
-'<path d="M',
-r + r0 * x0,
-r + r0 * y0,
-'L',
-r + r * x0,
-r + r * y0,
-'A',
-r,
-r,
-0,
-largeArc,
-1,
-r + r * x1,
-r + r * y1,
-'L',
-r + r0 * x1,
-r + r0 * y1,
-'A',
-r0,
-r0,
-0,
-largeArc,
-0,
-r + r0 * x0,
-r + r0 * y0,
-'" fill="' + color + '" />'
-].join(' ');
-}
- 
+    // Add personnal data (GEOJSON)
+
+    map.on('load', function() {
+
+
+      // Add arrondissements
+
+      map.addSource('lignes', {
+        type: 'geojson',
+        data: 'https://raw.githubusercontent.com/mastersigat/data/main/arrondissements.geojson'
+      });
+
+      map.addLayer({
+        'id': 'Lignes',
+        'type': 'line',
+        'source': 'lignes',
+        'paint': {
+          'line-width': 1,
+          'line-color': '#AAAAAA'
+        }
+      });
+
+
+      // ADD reporting layer
+
+      map.addSource('earthquakes', {
+        type: 'geojson',
+        data: 'https://raw.githubusercontent.com/mastersigat/data/main/DMR.geojson',
+        cluster: true,
+        clusterMaxZoom: 16,
+        clusterRadius: 50,
+        'clusterProperties': {
+          // keep separate counts for each magnitude category in a cluster
+          'mag1': ['+', ['case', mag1, 1, 0]],
+          'mag2': ['+', ['case', mag2, 1, 0]],
+          'mag3': ['+', ['case', mag3, 1, 0]]
+        }
+      });
+
+
+      // Cluster Labels
+
+      map.addLayer({
+        'id': 'earthquake_label',
+        'type': 'symbol',
+        'source': 'earthquakes',
+        'filter': ['!=', 'cluster', true],
+        'layout': {
+          'text-field': [
+            'number-format',
+            ['get', 'mag'],
+            {
+              'min-fraction-digits': 0,
+              'max-fraction-digits': 0
+            }
+          ],
+          'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
+          'text-size': 1
+        },
+        'paint': {
+          'text-color': [
+            'case',
+            ['<', ['get', 'mag'], 1],
+            'black',
+            'white'
+          ]
+        }
+      });
+
+      var markers = {};
+      var markersOnScreen = {};
+
+      function updateMarkers() {
+        var newMarkers = {};
+        var features = map.querySourceFeatures('earthquakes');
+
+
+        for (var i = 0; i < features.length; i++) {
+          var coords = features[i].geometry.coordinates;
+          var props = features[i].properties;
+          if (!props.cluster) continue;
+          var id = props.cluster_id;
+
+          var marker = markers[id];
+          if (!marker) {
+            var el = createDonutChart(props);
+            marker = markers[id] = new maplibregl.Marker({
+              element: el
+            }).setLngLat(coords);
+          }
+          newMarkers[id] = marker;
+
+          if (!markersOnScreen[id]) marker.addTo(map);
+        }
+
+        for (id in markersOnScreen) {
+          if (!newMarkers[id]) markersOnScreen[id].remove();
+        }
+        markersOnScreen = newMarkers;
+      }
+
+      map.on('data', function(e) {
+        if (e.sourceId !== 'earthquakes' || !e.isSourceLoaded) return;
+
+        map.on('move', updateMarkers);
+        map.on('moveend', updateMarkers);
+        updateMarkers();
+      });
+    });
+
+    function createDonutChart(props) {
+      var offsets = [];
+      var counts = [
+        props.mag1,
+        props.mag2,
+        props.mag3
+      ];
+      var total = 0;
+      for (var i = 0; i < counts.length; i++) {
+        offsets.push(total);
+        total += counts[i];
+      }
+      var fontSize =
+        total >= 1000 ? 15 : total >= 100 ? 12 : total >= 6 ? 10 : 5;
+      var r = total >= 20000 ? 50 : total >= 10000 ? 40 : total >= 5000 ? 30 : total >= 100 ? 20 : 15;
+      var r0 = Math.round(r * 0.6);
+      var w = r * 2;
+
+      var html =
+        '<div><svg width="' +
+        w +
+        '" height="' +
+        w +
+        '" viewbox="0 0 ' +
+        w +
+        ' ' +
+        w +
+        '" text-anchor="middle" style="font: ' +
+        fontSize +
+        'px sans-serif; display: block">';
+
+      for (i = 0; i < counts.length; i++) {
+        html += donutSegment(
+          offsets[i] / total,
+          (offsets[i] + counts[i]) / total,
+          r,
+          r0,
+          colors[i]
+        );
+      }
+      html +=
+        '<circle cx="' +
+        r +
+        '" cy="' +
+        r +
+        '" r="' +
+        r0 +
+        '" fill="white" /><text dominant-baseline="central" transform="translate(' +
+        r +
+        ', ' +
+        r +
+        ')">' +
+        total.toLocaleString() +
+        '</text></svg></div>';
+
+      var el = document.createElement('div');
+      el.innerHTML = html;
+      return el.firstChild;
+    }
+
+    function donutSegment(start, end, r, r0, color) {
+      if (end - start === 1) end -= 0.00001;
+      var a0 = 2 * Math.PI * (start - 0.25);
+      var a1 = 2 * Math.PI * (end - 0.25);
+      var x0 = Math.cos(a0),
+        y0 = Math.sin(a0);
+      var x1 = Math.cos(a1),
+        y1 = Math.sin(a1);
+      var largeArc = end - start > 0.5 ? 1 : 0;
+
+      return [
+        '<path d="M',
+        r + r0 * x0,
+        r + r0 * y0,
+        'L',
+        r + r * x0,
+        r + r * y0,
+        'A',
+        r,
+        r,
+        0,
+        largeArc,
+        1,
+        r + r * x1,
+        r + r * y1,
+        'L',
+        r + r0 * x1,
+        r + r0 * y1,
+        'A',
+        r0,
+        r0,
+        0,
+        largeArc,
+        0,
+        r + r0 * x0,
+        r + r0 * y0,
+        '" fill="' + color + '" />'
+      ].join(' ');
+    }
+
 
     // Add navigation control and scale
-  
-var nav = new maplibregl.NavigationControl();
-map.addControl(nav, 'top-left');
 
-var scale = new maplibregl.ScaleControl({
-maxWidth: 80,
-unit: 'metric'
-});
-map.addControl(scale);
+    var nav = new maplibregl.NavigationControl();
+    map.addControl(nav, 'top-left');
 
-</script>
-    
+    var scale = new maplibregl.ScaleControl({
+      maxWidth: 80,
+      unit: 'metric'
+    });
+    map.addControl(scale);
+  </script>
+
 </body>
+
 </html>

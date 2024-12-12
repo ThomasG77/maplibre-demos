@@ -1,100 +1,119 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <meta charset='utf-8' />
-    <title>MapLibreGL / Choropleth Map</title>
-    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-	
-<script src='https://unpkg.com/maplibre-gl@2.1.1/dist/maplibre-gl.js'></script>
-<link href='https://unpkg.com/maplibre-gl@2.1.1/dist/maplibre-gl.css' rel='stylesheet' />
+  <meta charset='utf-8' />
+  <title>MapLibreGL / Choropleth Map</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
 
-    <style>
-        body { margin:0; padding:0; }
-        h2, h3 {
-            margin: 10px;
-            font-size: 1.2em;
-        }
-        h3 {
-            font-size: 1em;
-        }
-        p {
-            font-size: 0.85em;
-            margin: 10px;
-            text-align: left;
-        }
-        .map-overlay {
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            background: rgba(255, 255, 255, 0.8);
-            margin-right: 20px;
-            font-family: Arial, sans-serif;
-            overflow: auto;
-            border-radius: 3px;
-        }
-        #map {
-            position:absolute;
-            top:0;
-            bottom:0;
-            width:100%;
-        }
-        #features {
-            top: 0;
-            width: 250px;
-			height: 150px;
-            margin-top: 20px;
-			margin-right: 20px;
-        }
-		
-        #legend {
-        left : 1%;
-        padding: 10px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.10);
-            line-height: 19px;
-            height: 160px;
-            width:230px;
-            margin-bottom: 50px;
-			background-color: #292929;
-     		opacity: 0.8;
-            font-size: 15;
-			color : #FFFFFF;
-        }
-        .legend-key {
-            display:inline-block;
-            border-radius: 30%;
-			border-color : #000000;
-            width: 15px;
-            height: 12px;
-            margin-right: 5px;
-        }
-    </style>
+  <script src='https://unpkg.com/maplibre-gl@2.1.1/dist/maplibre-gl.js'></script>
+  <link href='https://unpkg.com/maplibre-gl@2.1.1/dist/maplibre-gl.css' rel='stylesheet' />
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    h2,
+    h3 {
+      margin: 10px;
+      font-size: 1.2em;
+    }
+
+    h3 {
+      font-size: 1em;
+    }
+
+    p {
+      font-size: 0.85em;
+      margin: 10px;
+      text-align: left;
+    }
+
+    .map-overlay {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      background: rgba(255, 255, 255, 0.8);
+      margin-right: 20px;
+      font-family: Arial, sans-serif;
+      overflow: auto;
+      border-radius: 3px;
+    }
+
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+
+    #features {
+      top: 0;
+      width: 250px;
+      height: 150px;
+      margin-top: 20px;
+      margin-right: 20px;
+    }
+
+    #legend {
+      left: 1%;
+      padding: 10px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.10);
+      line-height: 19px;
+      height: 160px;
+      width: 230px;
+      margin-bottom: 50px;
+      background-color: #292929;
+      opacity: 0.8;
+      font-size: 15;
+      color: #FFFFFF;
+    }
+
+    .legend-key {
+      display: inline-block;
+      border-radius: 30%;
+      border-color: #000000;
+      width: 15px;
+      height: 12px;
+      margin-right: 5px;
+    }
+  </style>
 </head>
+
 <body>
- 
-<div id='map'></div>
-<div class='map-overlay' id='features'><h2>Explore the cities</h2><div id='pd'><p> <b>Hover the municipalities of Brittany</b> </p></div></div>
-<div class='map-overlay' id='legend'><b>Poulation density (2018)</b> <hR> </div>
 
-<script>
+  <div id='map'></div>
+  <div class='map-overlay' id='features'>
+    <h2>Explore the cities</h2>
+    <div id='pd'>
+      <p> <b>Hover the municipalities of Brittany</b> </p>
+    </div>
+  </div>
+  <div class='map-overlay' id='legend'><b>Poulation density (2018)</b>
+    <hR>
+  </div>
 
-//Configuration de la carte
-var map = new maplibregl.Map({
-    container: 'map', // container id
-  style: 'https://geoserveis.icgc.cat/contextmaps/positron.json', //Fond de carte 
-	center: [-2.802, 48.1],
-	zoom :7.7,
-	pitch : 20,
-	bearing : 1
-});
-map.on('style.load', function() {
+  <script>
+    //Configuration de la carte
+    var map = new maplibregl.Map({
+      container: 'map', // container id
+      style: 'styles/positron.json', //Fond de carte 
+      center: [-2.802, 48.1],
+      zoom: 7.7,
+      pitch: 20,
+      bearing: 1
+    });
+    map.on('style.load', function() {
 
-  // Configuration légende
+      // Configuration légende
 
-  map.getCanvas().style.cursor = 'default';
-    map.getCanvas().style.cursor = 'default';
-    var layers = ['-30 hab./km', '30-50 hab./km', '50-100 hab./km', '100-500 hab./km', '500-1000 hab./km', '+1000 hab./km'];
-    var colors = ['#4d9221', '#a1d76a', '#e6f5d0', '#fde0ef', '#e9a3c9', '#c51b7d'];
-    for (i=0; i<layers.length; i++) {
+      map.getCanvas().style.cursor = 'default';
+      map.getCanvas().style.cursor = 'default';
+      var layers = ['-30 hab./km', '30-50 hab./km', '50-100 hab./km', '100-500 hab./km', '500-1000 hab./km', '+1000 hab./km'];
+      var colors = ['#4d9221', '#a1d76a', '#e6f5d0', '#fde0ef', '#e9a3c9', '#c51b7d'];
+      for (i = 0; i < layers.length; i++) {
         var layer = layers[i] + "";
         var color = colors[i];
         var item = document.createElement('div');
@@ -106,86 +125,93 @@ map.on('style.load', function() {
         item.appendChild(key);
         item.appendChild(value);
         legend.appendChild(item);
-    }
-	
-  
-    // Add data
+      }
 
-      
- map.addSource('Municipalities', {
-            type: 'geojson',
-            data: 'https://raw.githubusercontent.com/mastersigat/data/main/communesBZH.geojson' 
-        });
- 
-  
-  
-	// Municipalities layer
-	
-map.addLayer({
+
+      // Add data
+
+
+      map.addSource('Municipalities', {
+        type: 'geojson',
+        data: 'https://raw.githubusercontent.com/mastersigat/data/main/communesBZH.geojson'
+      });
+
+
+
+      // Municipalities layer
+
+      map.addLayer({
         'id': 'Municipalities',
         'type': 'fill',
         'source': 'Municipalities',
-        'layout': {'visibility': 'visible'},
-		'paint': {'fill-outline-color': '#000000',
-                  'fill-color': ['interpolate',['linear'],
-					   ['get', 'density'],
-                        30, '#4d9221',
-						50, '#a1d76a',
-						100, '#e6f5d0',
-						200, '#fde0ef',
-						400, '#e9a3c9',
-						800, '#c51b7d'],
-                  'fill-opacity': 0.75}
-}); 
-	
-	
-	       // Add Departments
+        'layout': {
+          'visibility': 'visible'
+        },
+        'paint': {
+          'fill-outline-color': '#000000',
+          'fill-color': ['interpolate', ['linear'],
+            ['get', 'density'],
+            30, '#4d9221',
+            50, '#a1d76a',
+            100, '#e6f5d0',
+            200, '#fde0ef',
+            400, '#e9a3c9',
+            800, '#c51b7d'
+          ],
+          'fill-opacity': 0.75
+        }
+      });
 
-       map.addSource('lignes', {
-            type: 'geojson',
-            data: 'https://raw.githubusercontent.com/mastersigat/data/main/Departements.geojson' 
-        });
 
-     map.addLayer({
-            'id': 'Lignes',
-            'type': 'line',
-            'source': 'lignes',
-            'paint': {'line-width': 2.5,
-                     'line-color': '#111111'}
-     });   
-    
-		 
-		 
-		 
-    // Configuration PopUp
-	
-    map.on('mousemove', function (e) {
+      // Add Departments
+
+      map.addSource('lignes', {
+        type: 'geojson',
+        data: 'https://raw.githubusercontent.com/mastersigat/data/main/Departements.geojson'
+      });
+
+      map.addLayer({
+        'id': 'Lignes',
+        'type': 'line',
+        'source': 'lignes',
+        'paint': {
+          'line-width': 2.5,
+          'line-color': '#111111'
+        }
+      });
+
+
+
+
+      // Configuration PopUp
+
+      map.on('mousemove', function(e) {
         var states = map.queryRenderedFeatures(e.point, {
-            layers: ['Municipalities']
+          layers: ['Municipalities']
         });
         if (states.length > 0) {
-            document.getElementById('pd').innerHTML = "<h3><strong>" + states[0].properties.NOM_COM_M 
-			+ "</strong></h3><p><strong><em>" + states[0].properties.density + "</strong> hab./km2</em></p>"
-			+ "</strong></h3><p><strong><em>" + states[0].properties.POPULATION + "</strong> habitants </p>";
+          document.getElementById('pd').innerHTML = "<h3><strong>" + states[0].properties.NOM_COM_M +
+            "</strong></h3><p><strong><em>" + states[0].properties.density + "</strong> hab./km2</em></p>" +
+            "</strong></h3><p><strong><em>" + states[0].properties.POPULATION + "</strong> habitants </p>";
         } else {
-            document.getElementById('pd').innerHTML = '<p>Data : INSEE 2018 / OSM</p>';
+          document.getElementById('pd').innerHTML = '<p>Data : INSEE 2018 / OSM</p>';
         }
+      });
     });
-});
 
 
-// Add navigation control and scale
-  
-var nav = new maplibregl.NavigationControl();
-map.addControl(nav, 'top-left');
+    // Add navigation control and scale
 
-var scale = new maplibregl.ScaleControl({
-maxWidth: 80,
-unit: 'metric'
-});
-map.addControl(scale);
-  
-</script>
+    var nav = new maplibregl.NavigationControl();
+    map.addControl(nav, 'top-left');
+
+    var scale = new maplibregl.ScaleControl({
+      maxWidth: 80,
+      unit: 'metric'
+    });
+    map.addControl(scale);
+  </script>
 
 </body>
+
 </html>

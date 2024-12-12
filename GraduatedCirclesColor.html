@@ -1,139 +1,149 @@
 <html>
-  
+
 <head>
   <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-      <meta charset='utf-8' />
-    <title>MapLibreGL / Graduated Circles Map</title>
-	
-	
-	
-<script src='https://unpkg.com/maplibre-gl@2.1.1/dist/maplibre-gl.js'></script>
-<link href='https://unpkg.com/maplibre-gl@2.1.1/dist/maplibre-gl.css' rel='stylesheet' />
+  <meta charset='utf-8' />
+  <title>MapLibreGL / Graduated Circles Map</title>
+
+
+
+  <script src='https://unpkg.com/maplibre-gl@2.1.1/dist/maplibre-gl.js'></script>
+  <link href='https://unpkg.com/maplibre-gl@2.1.1/dist/maplibre-gl.css' rel='stylesheet' />
 
 
   <style>
-#map {position: absolute; top: 0; right: 0; bottom: 0; left: 0;}  
-    
-.Mypopup .maplibregl-popup-content {
-      background-color: black;
-      color : white;
-      opacity : 0.9;
-	  height : 200px;
- 	  width : 170px;
+    #map {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+    }
 
-	  }
-    
-    
+    .Mypopup .maplibregl-popup-content {
+      background-color: black;
+      color: white;
+      opacity: 0.9;
+      height: 200px;
+      width: 170px;
+
+    }
   </style>
 
-  </head>
+</head>
 
-  <body> 
-    
+<body>
+
   <div id="map"></div>
-   
-   
-<script>
-   
-      //Appel et configuration de la carte
-    
-var map = new maplibregl.Map({
-  container: 'map',
-  style: 'https://geoserveis.icgc.cat/contextmaps/positron.json', //Fond de carte 
-  zoom: 11.7, // Zoom
-  center: [2.335, 48.854],  // Centrage carte
-  pitch: 10, // Inclinaison carte
-  bearing: 0,  // Rotation carte
-  minZoom:11.7
+
+
+  <script>
+    //Appel et configuration de la carte
+
+    var map = new maplibregl.Map({
+      container: 'map',
+      style: 'styles/positron.json', //Fond de carte 
+      zoom: 11.7, // Zoom
+      center: [2.335, 48.854], // Centrage carte
+      pitch: 10, // Inclinaison carte
+      bearing: 0, // Rotation carte
+      minZoom: 11.7
     });
-    
-  // Ajout des données
-      
-map.on('load', function () {   
 
-// Add arrondissements
+    // Ajout des données
 
-       map.addSource('lignes', {
-            type: 'geojson',
-            data: 'https://raw.githubusercontent.com/mastersigat/data/main/arrondissements.geojson' 
-        });
+    map.on('load', function() {
 
-     map.addLayer({
-            'id': 'Lignes',
-            'type': 'line',
-            'source': 'lignes',
-            'paint': {'line-width': 1,
-                     'line-color': '#111111'}
-     });   
+      // Add arrondissements
+
+      map.addSource('lignes', {
+        type: 'geojson',
+        data: 'https://raw.githubusercontent.com/mastersigat/data/main/arrondissements.geojson'
+      });
+
+      map.addLayer({
+        'id': 'Lignes',
+        'type': 'line',
+        'source': 'lignes',
+        'paint': {
+          'line-width': 1,
+          'line-color': '#111111'
+        }
+      });
 
 
 
-// Add bike stations
-  
-  map.addSource('Stations', {
-            type: 'geojson',
-            data: 'https://raw.githubusercontent.com/mastersigat/data/main/velib-emplacement-des-stations.geojson' 
-        });
+      // Add bike stations
 
-     map.addLayer({
-            'id': 'Stations',
-            'type': 'circle',
-            'source': 'Stations',
-            'paint': {'circle-stroke-color': 'white', 
-                      'circle-stroke-width': 1, 
-                      'circle-radius': {
-        property: 'capacity',
-        type: 'exponential',
-        stops: [
-          [0, 0],
-          [95, 20]
-        ]
-      },
-                      'circle-color': '#0074D9'}}
-                 );  
+      map.addSource('Stations', {
+        type: 'geojson',
+        data: 'https://raw.githubusercontent.com/mastersigat/data/main/velib-emplacement-des-stations.geojson'
+      });
 
-		 
-		 
-         });
-  
-  
-  //Interactivité HOVER
+      map.addLayer({
+        'id': 'Stations',
+        'type': 'circle',
+        'source': 'Stations',
+        'paint': {
+          'circle-stroke-color': 'white',
+          'circle-stroke-width': 1,
+          'circle-radius': {
+            property: 'capacity',
+            type: 'exponential',
+            stops: [
+              [0, 0],
+              [95, 20]
+            ]
+          },
+          'circle-color': '#0074D9'
+        }
+      });
 
-var popup = new maplibregl.Popup({
-    className: "Mypopup",
-  closeButton: false,
-    closeOnClick: false });
 
-map.on('mousemove', function(e) {
-    var features = map.queryRenderedFeatures(e.point, { layers: ['Stations'] });
-    // Change the cursor style as a UI indicator.
-    map.getCanvas().style.cursor = (features.length) ? 'pointer' : '';
 
-    if (!features.length) {
+    });
+
+
+    //Interactivité HOVER
+
+    var popup = new maplibregl.Popup({
+      className: "Mypopup",
+      closeButton: false,
+      closeOnClick: false
+    });
+
+    map.on('mousemove', function(e) {
+      var features = map.queryRenderedFeatures(e.point, {
+        layers: ['Stations']
+      });
+      // Change the cursor style as a UI indicator.
+      map.getCanvas().style.cursor = (features.length) ? 'pointer' : '';
+
+      if (!features.length) {
         popup.remove();
-        return; }
- 
-    var feature = features[0];
-        popup.setLngLat(feature.geometry.coordinates)
-	  .setHTML('<h2>'+ feature.properties.name + '</h2><hr> <img src="https://img.20mn.fr/E_l1DZgVR-K26DkVcvjpYQ/640x410_velib-paris-illustration.jpg" style="width:70%"><h3>' + 'Bike Capacity: ' + feature.properties.capacity + '</h3>')
-      .addTo(map);
+        return;
+      }
 
-}); 
+      var feature = features[0];
+      popup.setLngLat(feature.geometry.coordinates)
+        .setHTML('<h2>' + feature.properties.name + '</h2><hr> <img src="https://img.20mn.fr/E_l1DZgVR-K26DkVcvjpYQ/640x410_velib-paris-illustration.jpg" style="width:70%"><h3>' + 'Bike Capacity: ' + feature.properties.capacity + '</h3>')
+        .addTo(map);
+
+    });
 
 
     // Add navigation control and scale
-  
-var nav = new maplibregl.NavigationControl();
-map.addControl(nav, 'top-left');
 
-var scale = new maplibregl.ScaleControl({
-maxWidth: 80,
-unit: 'metric'
-});
-map.addControl(scale);
+    var nav = new maplibregl.NavigationControl();
+    map.addControl(nav, 'top-left');
 
-  
-</script>
-    
+    var scale = new maplibregl.ScaleControl({
+      maxWidth: 80,
+      unit: 'metric'
+    });
+    map.addControl(scale);
+  </script>
+
 </body>
+
 </html>

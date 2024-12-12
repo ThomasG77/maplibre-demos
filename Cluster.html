@@ -1,107 +1,126 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta charset='utf-8' />
-<title>MapLibreGL / Clusters Map</title>
-<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-	
-<script src='https://unpkg.com/maplibre-gl@2.1.1/dist/maplibre-gl.js'></script>
-<link href='https://unpkg.com/maplibre-gl@2.1.1/dist/maplibre-gl.css' rel='stylesheet' />
+  <meta charset='utf-8' />
+  <title>MapLibreGL / Clusters Map</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+
+  <script src='https://unpkg.com/maplibre-gl@2.1.1/dist/maplibre-gl.js'></script>
+  <link href='https://unpkg.com/maplibre-gl@2.1.1/dist/maplibre-gl.css' rel='stylesheet' />
 
 
-<style>
-body { margin:0; padding:0; }
-#map { position:absolute; top:0; bottom:0; width:100%; }
-</style>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
 </head>
+
 <body>
- 
- 
-<div id='map'></div>
- 
-<script>
 
-var map = new maplibregl.Map({
-container: 'map',
-style: 'https://api.maptiler.com/maps/positron/style.json?key=rrASqj6frF6l2rrOFR4A', 
-  zoom: 11.7, // Zoom
-  center: [2.335, 48.858],  // Centrage carte
-  bearing: 0,  // Rotation carte
-  minZoom:11.7
-});
- 
-map.on('load', function() {
 
-  // Add arrondissements
+  <div id='map'></div>
 
-       map.addSource('lignes', {
-            type: 'geojson',
-            data: 'https://raw.githubusercontent.com/mastersigat/data/main/arrondissements.geojson' 
-        });
+  <script>
+    var map = new maplibregl.Map({
+      container: 'map',
+      style: 'styles/positron.json',
+      zoom: 11.7, // Zoom
+      center: [2.335, 48.858], // Centrage carte
+      bearing: 0, // Rotation carte
+      minZoom: 11.7
+    });
 
-     map.addLayer({
-            'id': 'Lignes',
-            'type': 'line',
-            'source': 'lignes',
-            'paint': {'line-width': 1,
-                     'line-color': '#AAAAAA'}
-     });   
-  
-  // Add data bike stations
-  
-  
-map.addSource('DMR', {
-            type: 'geojson',
-            data: 'https://raw.githubusercontent.com/mastersigat/data/main/DMR.geojson',
-			cluster: true,
-			clusterMaxZoom: 15,
-			clusterRadius: 40
-        });
+    map.on('load', function() {
 
-    // Configuration cluster Size and color
+      // Add arrondissements
 
-map.addLayer({
-            'id': 'Clusters',
-            'type': 'circle',
-            'source': 'DMR',
-            filter: ['has', 'point_count'],
-            paint: {'circle-color': ['step',['get', 'point_count'],
-						'#51bbd6',1000,
-						'#f1f075',2500,
-						'#f28cb1', 5000,
-						'#FF4136'],
-					'circle-stroke-color': '#ffffff',	
-					'circle-radius': ['step',['get', 'point_count'],
-									5,200,10,500,15,1000,20,3000,35,5000,45,8000,60]}
-}); 
+      map.addSource('lignes', {
+        type: 'geojson',
+        data: 'https://raw.githubusercontent.com/mastersigat/data/main/arrondissements.geojson'
+      });
 
-  
-  // Configuration cluster label
-  
-map.addLayer({ id: 'cluster-count',
-               type: 'symbol',
-               source: 'DMR',
-filter: ['has', 'point_count'],
-layout: {
-'text-field': '{point_count_abbreviated}',
-'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
-'text-size': 13}
-});  
+      map.addLayer({
+        'id': 'Lignes',
+        'type': 'line',
+        'source': 'lignes',
+        'paint': {
+          'line-width': 1,
+          'line-color': '#AAAAAA'
+        }
+      });
+
+      // Add data bike stations
+
+
+      map.addSource('DMR', {
+        type: 'geojson',
+        data: 'https://raw.githubusercontent.com/mastersigat/data/main/DMR.geojson',
+        cluster: true,
+        clusterMaxZoom: 15,
+        clusterRadius: 40
+      });
+
+      // Configuration cluster Size and color
+
+      map.addLayer({
+        'id': 'Clusters',
+        'type': 'circle',
+        'source': 'DMR',
+        filter: ['has', 'point_count'],
+        paint: {
+          'circle-color': ['step', ['get', 'point_count'],
+            '#51bbd6', 1000,
+            '#f1f075', 2500,
+            '#f28cb1', 5000,
+            '#FF4136'
+          ],
+          'circle-stroke-color': '#ffffff',
+          'circle-radius': ['step', ['get', 'point_count'],
+            5, 200, 10, 500, 15, 1000, 20, 3000, 35, 5000, 45, 8000, 60
+          ]
+        }
+      });
+
+
+      // Configuration cluster label
+
+      map.addLayer({
+        id: 'cluster-count',
+        type: 'symbol',
+        source: 'DMR',
+        filter: ['has', 'point_count'],
+        layout: {
+          'text-field': '{point_count_abbreviated}',
+          'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+          'text-size': 13
+        }
+      });
 
     });
-  
-  
-    // Add navigation control and scale
-  
-var nav = new maplibregl.NavigationControl();
-map.addControl(nav, 'top-left');
 
-var scale = new maplibregl.ScaleControl({
-maxWidth: 80,
-unit: 'metric'
-});
-map.addControl(scale);
-</script>
- 
+
+    // Add navigation control and scale
+
+    var nav = new maplibregl.NavigationControl();
+    map.addControl(nav, 'top-left');
+
+    var scale = new maplibregl.ScaleControl({
+      maxWidth: 80,
+      unit: 'metric'
+    });
+    map.addControl(scale);
+  </script>
+
 </body>
+
 </html>

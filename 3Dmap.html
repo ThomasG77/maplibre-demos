@@ -1,117 +1,125 @@
 <html>
-  
+
 <head>
   <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-<script src='https://unpkg.com/maplibre-gl@2.1.1/dist/maplibre-gl.js'></script>
-<link href='https://unpkg.com/maplibre-gl@2.1.1/dist/maplibre-gl.css' rel='stylesheet' />
+  <script src='https://unpkg.com/maplibre-gl@2.1.1/dist/maplibre-gl.js'></script>
+  <link href='https://unpkg.com/maplibre-gl@2.1.1/dist/maplibre-gl.css' rel='stylesheet' />
 
   <style>
-#map {position: absolute; top: 0; right: 0; bottom: 0; left: 0;}  
+    #map {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+    }
 
-.Mypopup .mapboxgl-popup-content {
+    .Mypopup .mapboxgl-popup-content {
       background-color: black;
-      color : white;
-      opacity : 0.9;}
-
+      color: white;
+      opacity: 0.9;
+    }
   </style>
 
-  </head>
+</head>
 
-  <body> 
-    
+<body>
+
   <div id="map"></div>
 
-<script>
+  <script>
+    // Map configuration
 
-// Map configuration
+    var map = new maplibregl.Map({
+      container: 'map',
+      style: 'styles/positron.json', //Fond de carte
+      center: [-1.7023, 48.05], // starting position [lng, lat]
+      zoom: 10.5,
+      pitch: 50
+    });
 
-var map = new maplibregl.Map({
-  container: 'map',
-  style: 'https://geoserveis.icgc.cat/contextmaps/positron.json', //Fond de carte 
-    center: [-1.7023, 48.05], // starting position [lng, lat]
-    zoom: 10.5,
-    pitch : 50	
-});
+    // Add data
 
-  // Add data
+    map.on('style.load', function() {
 
-map.on('style.load', function() {
-      
-map.addSource('Carro', {
-            type: 'geojson',
-            data: 'https://raw.githubusercontent.com/mastersigat/data/main/200m_carreaux_metropole_shapefile_wgs84.geojson' 
-        });
- 
-// 3D fill extrusion and symbology  
-	    
-  map.addLayer({
-    'id': 'extrude',
-    'type': 'fill-extrusion',
-    'source': 'Carro',
-    'layout': {
-    'visibility': 'visible'},
-    'paint': {
-      'fill-extrusion-color': {
-        'property': 'ind_c',
-        'stops': [
-          [1, '#1a9850'],
-          [20, '#91cf60'],
-          [50, '#d9ef8b'],
-		      [100, '#ffffbf'],
-      	  [200, '#fee08b'],
-		      [300, '#fc8d59'],
-          [500, '#d73027']]      },
-      'fill-extrusion-height': {
-        'property': 'ind_c',
-		     'stops':  
-         [[1, 0],
-         [10, 100],
-		  	 [1000, 5000]]},
-      'fill-extrusion-opacity': 0.95,
-      'fill-extrusion-base': 0
-    } 
-  }); 
- 
-});
+      map.addSource('Carro', {
+        type: 'geojson',
+        data: 'https://raw.githubusercontent.com/mastersigat/data/main/200m_carreaux_metropole_shapefile_wgs84.geojson'
+      });
 
- // Interactivity configuration (popup)
+      // 3D fill extrusion and symbology  
 
-var popup = new maplibregl.Popup({
-    className: "Mypopup",
-  closeButton: false,
-    closeOnClick: false });
+      map.addLayer({
+        'id': 'extrude',
+        'type': 'fill-extrusion',
+        'source': 'Carro',
+        'layout': {
+          'visibility': 'visible'
+        },
+        'paint': {
+          'fill-extrusion-color': {
+            'property': 'ind_c',
+            'stops': [
+              [1, '#1a9850'],
+              [20, '#91cf60'],
+              [50, '#d9ef8b'],
+              [100, '#ffffbf'],
+              [200, '#fee08b'],
+              [300, '#fc8d59'],
+              [500, '#d73027']
+            ]
+          },
+          'fill-extrusion-height': {
+            'property': 'ind_c',
+            'stops': [
+              [1, 0],
+              [10, 100],
+              [1000, 5000]
+            ]
+          },
+          'fill-extrusion-opacity': 0.95,
+          'fill-extrusion-base': 0
+        }
+      });
 
-map.on('mousemove', 'extrude', function(e) {
-        // Change the cursor style as a UI indicator.
-        map.getCanvas().style.cursor = 'pointer';
+    });
 
-        // Single out the first found feature.
-        var feature = e.features[0];
+    // Interactivity configuration (popup)
 
-        // Display a popup with the name of the county
-        popup.setLngLat(e.lngLat)
-            .setHTML('<b> Population du carreau</b>' + '<br>' +  feature.properties.ind_c  + '  habitans')
-            .addTo(map);
+    var popup = new maplibregl.Popup({
+      className: "Mypopup",
+      closeButton: false,
+      closeOnClick: false
+    });
+
+    map.on('mousemove', 'extrude', function(e) {
+      // Change the cursor style as a UI indicator.
+      map.getCanvas().style.cursor = 'pointer';
+
+      // Single out the first found feature.
+      var feature = e.features[0];
+
+      // Display a popup with the name of the county
+      popup.setLngLat(e.lngLat)
+        .setHTML('<b> Population du carreau</b>' + '<br>' + feature.properties.ind_c + '  habitans')
+        .addTo(map);
     });
 
     map.on('mouseleave', 'extrude', function() {
-        map.getCanvas().style.cursor = '';
-        popup.remove();
+      map.getCanvas().style.cursor = '';
+      popup.remove();
     });
 
     // Add navigation control and scale
-  
-var nav = new maplibregl.NavigationControl();
-map.addControl(nav, 'top-left');
 
-var scale = new maplibregl.ScaleControl({
-maxWidth: 80,
-unit: 'metric'
-});
-map.addControl(scale);
+    var nav = new maplibregl.NavigationControl();
+    map.addControl(nav, 'top-left');
 
-
-  
-</script>
+    var scale = new maplibregl.ScaleControl({
+      maxWidth: 80,
+      unit: 'metric'
+    });
+    map.addControl(scale);
+  </script>
 
 </body>
